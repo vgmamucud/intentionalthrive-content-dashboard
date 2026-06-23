@@ -883,10 +883,24 @@ SLIDE 7 (CTA): Welcome to Intentional Thrive. Follow along. Ask questions. Share
         <div class="page-sub">Capture ideas, generate full copy with AI, promote to Pipeline.</div>
 
         <!-- Ollama status + new idea -->
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
           <button class="btn-primary" onclick="toggleIdeaForm()">+ New Idea</button>
           <div id="ollama-status" class="ollama-badge ollama-off"><span class="dot"></span> Ollama offline</div>
-          <span style="font-size:.7rem;color:var(--muted);">Run proxy to enable AI generation</span>
+          <button class="btn-ghost" onclick="toggleOllamaSettings()" style="padding:5px 10px;font-size:.72rem;">⚙ AI Settings</button>
+        </div>
+        <!-- ngrok / ollama settings panel -->
+        <div id="ollama-settings" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:14px;max-width:580px;">
+          <div style="font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;">AI Generation Settings</div>
+          <div style="font-size:.78rem;color:var(--text);margin-bottom:10px;line-height:1.6;">
+            Paste your <strong>ngrok URL</strong> below (e.g. <code style="background:#f0f0f0;padding:1px 5px;border-radius:4px;">https://abc123.ngrok-free.app</code>).
+            Get it by running <code style="background:#f0f0f0;padding:1px 5px;border-radius:4px;">ngrok http 11434</code> in Terminal.
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <input id="ngrok-url-input" class="form-input" placeholder="https://abc123.ngrok-free.app" style="flex:1;min-width:240px;font-size:.8rem;" value="" />
+            <button class="btn-primary" onclick="saveOllamaUrl()" style="white-space:nowrap;">Save & Test</button>
+            <button class="btn-ghost" onclick="resetOllamaUrl()" style="white-space:nowrap;font-size:.75rem;">Reset to local</button>
+          </div>
+          <div id="ollama-settings-msg" style="font-size:.72rem;margin-top:8px;min-height:16px;"></div>
         </div>
 
         <!-- Filter rows -->
@@ -1127,25 +1141,59 @@ function quickAdd(stage){
 }
 
 // ── OLLAMA CONFIG ──
-const OLLAMA_PROXY = 'http://localhost:8080';
+const OLLAMA_PROXY_LOCAL = 'http://localhost:8080/proxy';
+const OLLAMA_NGROK_DEFAULT = 'https://educator-kerchief-showplace.ngrok-free.dev';
+let OLLAMA_PROXY = localStorage.getItem('ollama_url') || OLLAMA_NGROK_DEFAULT;
 const OLLAMA_MODEL = 'gemma3'; // fallback to qwen3.5 if not found
 let ollamaOnline = false;
 
 async function checkOllama(){
   try {
-    const r = await fetch(OLLAMA_PROXY+'/api/tags', { signal: AbortSignal.timeout(2000) });
+    const r = await fetch(OLLAMA_PROXY+'/api/tags', { signal: AbortSignal.timeout(3000) });
     if(r.ok){
       const data = await r.json();
       ollamaOnline = true;
       const badge = document.getElementById('ollama-status');
       badge.className = 'ollama-badge ollama-ok';
-      // pick best available model
       const models = (data.models||[]).map(m=>m.name);
       const preferred = ['gemma3','gemma3:latest','gemma:latest','qwen3.5','qwen3.5:latest','llama3','llama3.1','mistral'];
       window._ollamaModel = preferred.find(p=>models.some(m=>m.startsWith(p.split(':')[0]))) || models[0] || OLLAMA_MODEL;
       badge.innerHTML = '<span class="dot"></span> Ollama online · '+window._ollamaModel;
-    }
-  } catch(e){ ollamaOnline = false; }
+    } else { ollamaOnline = false; setOfflineBadge(); }
+  } catch(e){ ollamaOnline = false; setOfflineBadge(); }
+}
+function setOfflineBadge(){
+  const badge = document.getElementById('ollama-status');
+  if(badge){ badge.className='ollama-badge ollama-off'; badge.innerHTML='<span class="dot"></span> Ollama offline'; }
+}
+function toggleOllamaSettings(){
+  const panel = document.getElementById('ollama-settings');
+  const input = document.getElementById('ngrok-url-input');
+  panel.style.display = panel.style.display==='none' ? 'block' : 'none';
+  if(panel.style.display==='block'){
+    input.value = localStorage.getItem('ollama_url') || '';
+  }
+}
+async function saveOllamaUrl(){
+  const raw = document.getElementById('ngrok-url-input').value.trim().replace(/\/$/, '');
+  const msg = document.getElementById('ollama-settings-msg');
+  if(!raw){ msg.style.color='#b03030'; msg.textContent='Please enter a URL.'; return; }
+  OLLAMA_PROXY = raw;
+  localStorage.setItem('ollama_url', raw);
+  msg.style.color='var(--muted)'; msg.textContent='Testing connection...';
+  await checkOllama();
+  if(ollamaOnline){
+    msg.style.color='#1a6630'; msg.textContent='✓ Connected! You can now use ✦ Generate on any idea.';
+  } else {
+    msg.style.color='#b03030'; msg.textContent='✗ Could not connect. Check your ngrok URL and make sure Ollama is running.';
+  }
+}
+function resetOllamaUrl(){
+  localStorage.removeItem('ollama_url');
+  OLLAMA_PROXY = OLLAMA_NGROK_DEFAULT;
+  document.getElementById('ngrok-url-input').value = OLLAMA_NGROK_DEFAULT;
+  document.getElementById('ollama-settings-msg').textContent = 'Reset to default ngrok URL.';
+  checkOllama();
 }
 
 function buildPrompt(idea){
