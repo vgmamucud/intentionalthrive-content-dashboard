@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intentional Thrive — Content HQ</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #faf8f4;
+      --surface: #ffffff;
+      --accent: #4a7c59;
+      --accent-light: #e8f0ea;
+      --accent-mid: #c5d9ca;
+      --heading: #1e2d24;
+      --text: #3a3a3a;
+      --muted: #888;
+      --border: #e4e0d8;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: -apple-system, 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px 16px 80px;
+      font-size: 14px;
+    }
+
+    /* ─── TOP BAR ─── */
+    .topbar {
+      max-width: 960px;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .logo { font-size: 1rem; font-weight: 800; color: var(--accent); letter-spacing: -.02em; }
+    .logo em { color: var(--heading); font-style: normal; }
+    .topbar-meta { font-size: 0.75rem; color: var(--muted); }
+
+    /* ─── LAYOUT ─── */
+    .wrap { max-width: 960px; margin: 0 auto; }
+
+    /* ─── BANNER ─── */
+    .banner {
+      background: var(--accent-light);
+      border: 1px solid var(--accent-mid);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .banner-wk { font-size: 2rem; font-weight: 900; color: var(--accent); line-height: 1; }
+    .banner-info h2 { font-size: 1rem; font-weight: 700; color: var(--heading); }
+    .banner-info p { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+    .banner-pills { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+    .pill {
+      font-size: 0.68rem; font-weight: 700; padding: 3px 9px;
+      border-radius: 20px; white-space: nowrap;
+    }
+    .pill-green { background: #d4edda; color: #1a6630; }
+    .pill-yellow { background: #fff3cd; color: #856404; }
+    .pill-gray { background: #f0f0f0; color: #555; }
+
+    /* ─── GRID ─── */
+    .grid { display: grid; grid-template-columns: 340px 1fr; gap: 16px; }
+    @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+    .col-full { grid-column: 1 / -1; }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+    .card-title {
+      font-size: 0.65rem; font-weight: 800; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+    }
+
+    /* ─── CHECKLIST ─── */
+    .checklist { list-style: none; }
+    .checklist li {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+    }
+    .checklist li:last-child { border-bottom: none; }
+
+    .chk {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid var(--border); cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s;
+    }
+    .chk.done { background: var(--accent); border-color: var(--accent); }
+    .chk.done::after { content: '✓'; color: #fff; font-size: 10px; font-weight: 800; }
+    .chk:not(.done):hover { border-color: var(--accent); }
+
+    .chk-label { flex: 1; font-size: 0.83rem; }
+    .chk-label.struck { text-decoration: line-through; color: var(--muted); }
+
+    .tag {
+      font-size: 0.65rem; font-weight: 700; padding: 2px 7px;
+      border-radius: 10px; white-space: nowrap;
+    }
+    .tag-kit { background: #fce8e8; color: #b03030; }
+    .tag-fb  { background: #e8eef8; color: #2d5fa3; }
+    .tag-li  { background: #e8f4fb; color: #0a66c2; }
+    .tag-ig  { background: #fce4f3; color: #9b2578; }
+    .tag-site { background: #f3f0fc; color: #5f3dc4; }
+
+    /* ─── WEEK TABS ─── */
+    .week-tabs {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;
+    }
+    .wtab {
+      padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+      cursor: pointer; border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--muted); transition: all .15s;
+    }
+    .wtab:hover { border-color: var(--accent); color: var(--accent); }
+    .wtab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* ─── CONTENT PANEL ─── */
+    .week-panel { display: none; }
+    .week-panel.visible { display: block; }
+
+    .week-header { margin-bottom: 14px; }
+    .week-header h3 { font-size: 0.95rem; font-weight: 700; color: var(--heading); line-height: 1.3; }
+    .week-header p { font-size: 0.75rem; color: var(--muted); margin-top: 3px; }
+
+    /* ─── POST BLOCKS ─── */
+    .post-tabs {
+      display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px;
+    }
+    .ptab {
+      padding: 4px 11px; border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+      cursor: pointer; border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--muted); transition: all .15s;
+    }
+    .ptab:hover { border-color: var(--accent); color: var(--accent); }
+    .ptab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    .post-panel { display: none; }
+    .post-panel.visible { display: block; }
+
+    .post-box {
+      position: relative;
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 44px 14px 14px;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      max-height: 320px;
+      overflow-y: auto;
+      color: var(--text);
+    }
+
+    .copy-btn {
+      position: absolute; top: 10px; right: 10px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 6px;
+      padding: 5px 10px; font-size: 0.7rem; font-weight: 700;
+      cursor: pointer; transition: all .15s;
+    }
+    .copy-btn:hover { background: #3a6347; }
+    .copy-btn.copied { background: #1a6630; }
+
+    .post-note {
+      font-size: 0.72rem; color: var(--muted);
+      margin-top: 6px; font-style: italic;
+    }
+
+    /* ─── INFO ROWS ─── */
+    .info-row {
+      display: flex; gap: 8px; padding: 7px 0;
+      border-bottom: 1px solid var(--border); align-items: flex-start;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-lbl {
+      font-size: 0.67rem; font-weight: 800; color: var(--muted);
+      width: 80px; flex-shrink: 0; padding-top: 1px;
+      text-transform: uppercase; letter-spacing: .04em;
+    }
+    .info-val { color: var(--heading); font-weight: 500; word-break: break-all; font-size: 0.83rem; }
+    .info-val a { color: var(--accent); text-decoration: none; }
+    .info-val a:hover { text-decoration: underline; }
+    .info-val code {
+      font-size: 0.75rem; background: #f0f0f0;
+      padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', monospace;
+    }
+
+    /* ─── PLATFORM LIST ─── */
+    .plat-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 7px 0; border-bottom: 1px solid var(--border);
+      font-size: 0.83rem;
+    }
+    .plat-item:last-child { border-bottom: none; }
+    .plat-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      font-size: 0.7rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: #fff;
+    }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      max-width: 960px; margin: 28px auto 0;
+      text-align: center; font-size: 0.72rem; color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">Intentional <em>Thrive</em> — Content HQ</div>
+  <div class="topbar-meta">June 2026 · Private use only</div>
+</div>
+
+<div class="wrap">
+
+  <!-- BANNER -->
+  <div class="banner">
+    <div class="banner-wk">W1</div>
+    <div class="banner-info">
+      <h2>Money Mindset — Origin Story</h2>
+      <p>"Money Didn't Change Me. My Relationship With It Did."</p>
+    </div>
+    <div class="banner-pills">
+      <span class="pill pill-green">Article ✓ Live</span>
+      <span class="pill pill-yellow">Newsletter Pending</span>
+      <span class="pill pill-gray">Social → To Post</span>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- LEFT: CHECKLIST + SITE INFO -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- CHECKLIST -->
+      <div class="card">
+        <div class="card-title">This Week's Checklist</div>
+        <ul class="checklist" id="checklist">
+          <li>
+            <div class="chk done" data-idx="0"></div>
+            <span class="chk-label struck">Publish Article 1 on website</span>
+            <span class="tag tag-site">Site</span>
+          </li>
+          <li>
+            <div class="chk" data-idx="1"></div>
+            <span class="chk-label">Send Welcome Newsletter via Kit</span>
+            <span class="tag tag-kit">Kit</span>
+          </li>
+          <li>
+            <div class="chk" data-idx="2"></div>
+            <span class="chk-label">Post FB text post (Taglish)</span>
+            <span class="tag tag-fb">FB</span>
+          </li>
+          <li>
+            <div class="chk" data-idx="3"></div>
+            <span class="chk-label">Post LinkedIn text post</span>
+            <span class="tag tag-li">LI</span>
+          </li>
+          <li>
+            <div class="chk" data-idx="4"></div>
+            <span class="chk-label">Post Carousel — 7 slides ready</span>
+            <span class="tag tag-fb">FB/IG</span>
+          </li>
+          <li>
+            <div class="chk" data-idx="5"></div>
+            <span class="chk-label">Record & post Reel (voice-over)</span>
+            <span class="tag tag-ig">IG</span>
+          </li>
+          <li>
+            <div class="chk" data-idx="6"></div>
+            <span class="chk-label">Update About page: email + social links</span>
+            <span class="tag tag-site">Site</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- SITE INFO -->
+      <div class="card">
+        <div class="card-title">Site & Deploy</div>
+        <div class="info-row">
+          <div class="info-lbl">Live</div>
+          <div class="info-val"><a href="https://intentionalthrive.com" target="_blank">intentionalthrive.com ↗</a></div>
+        </div>
+        <div class="info-row">
+          <div class="info-lbl">Staging</div>
+          <div class="info-val"><a href="https://intentionalthrive.vercel.app" target="_blank">vercel.app ↗</a></div>
+        </div>
+        <div class="info-row">
+          <div class="info-lbl">Repo</div>
+          <div class="info-val"><a href="https://github.com/vgmamucud/intentionalthrive" target="_blank">vgmamucud/intentionalthrive ↗</a></div>
+        </div>
+        <div class="info-row">
+          <div class="info-lbl">Deploy</div>
+          <div class="info-val"><code>git add . → commit → git push</code></div>
+        </div>
+        <div class="info-row">
+          <div class="info-lbl">Still to do</div>
+          <div class="info-val">Real email · Social links · Photo (optional)</div>
+        </div>
+      </div>
+
+      <!-- PLATFORMS -->
+      <div class="card">
+        <div class="card-title">Platform Priority</div>
+        <div class="plat-item">
+          <div class="plat-num" style="background:#2d5fa3">1</div>
+          <div><strong>Personal Facebook</strong> · helloitsvenus<br><span style="color:var(--muted);font-size:.75rem">6.8K followers · Taglish</span></div>
+        </div>
+        <div class="plat-item">
+          <div class="plat-num" style="background:#0a66c2">2</div>
+          <div><strong>LinkedIn</strong><br><span style="color:var(--muted);font-size:.75rem">4K followers · English only</span></div>
+        </div>
+        <div class="plat-item">
+          <div class="plat-num" style="background:#c13584">3</div>
+          <div><strong>Instagram</strong><br><span style="color:var(--muted);font-size:.75rem">Level 2 — Months 3–4</span></div>
+        </div>
+        <div class="plat-item">
+          <div class="plat-num" style="background:#aaa">4</div>
+          <div><strong>TikTok / Reels</strong><br><span style="color:var(--muted);font-size:.75rem">Phase 2</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: CONTENT PANELS -->
+    <div class="card">
+      <div class="card-title">Content Library — Click to Copy</div>
+
+      <!-- WEEK TABS -->
+      <div class="week-tabs">
+        <div class="wtab active" onclick="showWeek(0, this)">Newsletter</div>
+        <div class="wtab" onclick="showWeek(1, this)">Week 1</div>
+        <div class="wtab" onclick="showWeek(2, this)">Week 2</div>
+        <div class="wtab" onclick="showWeek(3, this)">Week 3</div>
+        <div class="wtab" onclick="showWeek(4, this)">Week 4</div>
+        <div class="wtab" onclick="showWeek(5, this)">Week 5</div>
+      </div>
+
+      <!-- ── NEWSLETTER ── -->
+      <div class="week-panel visible" id="week-0">
+        <div class="week-header">
+          <h3>Welcome Newsletter — Kit Broadcast</h3>
+          <p>Subject: Before we talk about your policy — read this first</p>
+        </div>
+        <div class="post-tabs">
+          <div class="ptab active" onclick="showPost('n', 'newsletter', this)">Full Email</div>
+        </div>
+        <div class="post-panel visible" id="n-newsletter">
+          <div class="post-box" id="text-n-newsletter">Subject: Before we talk about your policy — read this first
+Preview: Something I've been wanting to say for a while.
+
+Hi [First Name],
+
+If you're on this list, you probably know me as your financial advisor, or someone in the Pru Life UK world.
+
+But I want to tell you something I don't usually say in a client meeting.
+
+I didn't always have a healthy relationship with money.
+
+I knew the products. I knew the numbers. But for a long time, I was helping other people protect their futures while quietly ignoring the gaps in my own.
+
+It wasn't until I started asking different questions — not "how much do I need?" but "what am I actually building toward?" — that things started to shift.
+
+That's what Intentional Thrive is about.
+
+Not more financial tips. Not another insurance pitch. Just honest conversations about money, life, and what it actually takes to build something that lasts — written by someone who's still figuring it out alongside you.
+
+Every week I'll share one article on something real: money mindset, financial foundations, how to actually think about protection, and what it looks like to design your life on purpose.
+
+The first one is already up:
+→ Money Didn't Change Me. My Relationship With It Did.
+https://intentionalthrive.com/blog/article-1
+
+I'd love to know what resonates. Just hit reply — I read every one.
+
+Talk soon,
+Venus</div>
+          <button class="copy-btn" onclick="copyText('n-newsletter', this)">Copy</button>
+        </div>
+        <p class="post-note">Kit → Broadcasts → New Broadcast → paste above → Send</p>
+      </div>
+
+      <!-- ── WEEK 1 ── -->
+      <div class="week-panel" id="week-1">
+        <div class="week-header">
+          <h3>Money Didn't Change Me. My Relationship With It Did.</h3>
+          <p>Pillar: Money Mindset · Article live: intentionalthrive.com/blog/article-1</p>
+        </div>
+        <div class="post-tabs">
+          <div class="ptab active" onclick="showPost('w1', 'fb', this)">Facebook</div>
+          <div class="ptab" onclick="showPost('w1', 'li', this)">LinkedIn</div>
+          <div class="ptab" onclick="showPost('w1', 'reel', this)">Reel Script</div>
+          <div class="ptab" onclick="showPost('w1', 'carousel', this)">Carousel</div>
+        </div>
+
+        <div class="post-panel visible" id="w1-fb">
+          <div class="post-box" id="text-w1-fb">May pattern ako na tumatagal sa aking pamilya na hindi ko agad nakita noong bata pa ako.
+
+Pag may pera, may relief. May pagkakataon mag-enjoy. Tapos halos wala na ulit. At uulit ulit ang cycle.
+
+Nang magsimula na akong kumita nang maayos, akala ko mawawala na yun.
+
+Hindi nawala. Lumaki lang ang numbers.
+
+It took me years to realize: hindi pera ang problema. Ang money story ko ang problema — yung invisible na script na tumatakbo sa likod ng bawat financial decision ko.
+
+At marami sa ating mga Pilipino, the money story we inherited sounds like:
+
+"Basta may pang-araw-araw, okay na."
+"Huwag maging madamot."
+"Ang pera, papalarin mo na lang."
+
+Hindi ito masama. Survival wisdom ito ng mga taong nagmahal sa atin.
+
+Pero may pagkakaiba ang surviving at designing your financial life.
+
+That's the shift I'm here to talk about.
+
+Hindi lang strategy. Hindi lang products. Yung kwento sa ilalim — yun ang sinisimulang suriin natin.
+
+Kung naresonahan ka nito, andito ka sa tamang lugar. 🌿
+
+(Full article now live on intentionalthrive.com — link in bio)</div>
+          <button class="copy-btn" onclick="copyText('w1-fb', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w1-li">
+          <div class="post-box" id="text-w1-li">Early in my career, I assumed that more income would solve everything.
+
+It didn't. It just made the same patterns more visible.
+
+I was earning. I was busy. I was helping clients protect their families and plan their futures. And yet my own relationship with money was still running on an old, inherited script — one I hadn't examined or intentionally rewritten.
+
+The term for this is a money story: the beliefs and automatic responses around money that most of us formed before the age of ten.
+
+Here's what I've observed after years in financial services: strategy without mindset just amplifies existing patterns. The client who avoids looking at their portfolio has the same underlying relationship with money as the one who checks it obsessively. Both are being run by a story.
+
+The most effective financial planning I've seen doesn't start with products. It starts with a conversation about what money means to the person sitting across from you — what they're afraid of, what they believe they deserve, what they've inherited.
+
+That's the premise of Intentional Thrive — a space for Filipino professionals who are ready to examine that story and design something better.
+
+If you're in financial services, or you work with clients who are — this conversation matters.
+
+(First article now live: "Money Didn't Change Me. My Relationship With It Did." — link in comments)</div>
+          <button class="copy-btn" onclick="copyText('w1-li', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w1-reel">
+          <div class="post-box" id="text-w1-reel">HOOK (text card or spoken, first 3 sec):
+"More money didn't fix it. This did."
+
+VOICE-OVER:
+"I grew up watching money come and go in cycles. Enough to feel okay. Then almost nothing left. Then starting over.
+
+When I started earning — really earning — I thought the pattern would stop.
+
+It didn't. It just wore different clothes.
+
+The numbers got bigger. The feeling stayed the same.
+
+What I eventually realized was this: I hadn't changed my money story. I had only changed my income.
+
+And those are two very different things.
+
+Your money story is the invisible script running underneath every financial decision you make. Most of us inherited ours before we were ten years old.
+
+And until we examine it — really examine it — no amount of income, investment, or insurance will feel like enough.
+
+That's what Intentional Thrive is about. Not just the strategy. The story underneath it.
+
+If this resonates, you're in the right place."
+
+END CARD:
+Intentional Thrive | intentionalthrive.com
+Follow for more ↓
+
+Visual direction: B-roll of everyday life — morning coffee, planner, quiet moment at desk. Voice-over only, no face needed.</div>
+          <button class="copy-btn" onclick="copyText('w1-reel', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w1-carousel">
+          <div class="post-box" id="text-w1-carousel">SLIDE 1:
+5 Signs Your Money Pattern Is Running You
+(Not the Other Way Around)
+— Intentional Thrive
+
+SLIDE 2:
+Sign #1
+You earn more every year but your savings don't reflect it.
+It's not a discipline problem. It's a pattern problem.
+
+SLIDE 3:
+Sign #2
+You feel relief when money comes in — and anxiety when it goes out.
+Money that triggers emotional highs and lows is money you're not in control of.
+
+SLIDE 4:
+Sign #3
+You avoid looking at your bank account.
+What we don't look at, we can't change.
+
+SLIDE 5:
+Sign #4
+You have a financial plan — but you never quite follow through on it.
+The plan isn't the problem. The story underneath it is.
+
+SLIDE 6:
+Sign #5
+You feel like you're always starting over.
+If the cycle keeps repeating, the variable isn't the money. It's the mindset.
+
+SLIDE 7 (CTA):
+The first step isn't a new investment.
+It's a new conversation — with yourself.
+
+Read the full article at intentionalthrive.com
+Or drop "MINDSET" in the comments and I'll send it to you. 💚</div>
+          <button class="copy-btn" onclick="copyText('w1-carousel', this)">Copy</button>
+        </div>
+      </div>
+
+      <!-- ── WEEK 2 ── -->
+      <div class="week-panel" id="week-2">
+        <div class="week-header">
+          <h3>How I Manage a Team, 600 Clients, and a Toddler — And Still Have a Plan</h3>
+          <p>Pillar: Intentional Living · intentionalthrive.com/blog/article-2</p>
+        </div>
+        <div class="post-tabs">
+          <div class="ptab active" onclick="showPost('w2', 'fb', this)">Facebook</div>
+          <div class="ptab" onclick="showPost('w2', 'li', this)">LinkedIn</div>
+          <div class="ptab" onclick="showPost('w2', 'reel', this)">Reel Script</div>
+          <div class="ptab" onclick="showPost('w2', 'carousel', this)">Carousel</div>
+        </div>
+
+        <div class="post-panel visible" id="w2-fb">
+          <div class="post-box" id="text-w2-fb">Last Tuesday, Aki had a meltdown at 6:47 AM over the color of his cup.
+
+My team check-in was at 7:00.
+
+Naka-daster pa ko. Half-made pa ang kape ko. At sinusubukan kong maging composed para sa aking team.
+
+Hindi ko kaya lahat. Hindi ko sinasabi na kaya ko lahat.
+
+Ang sinasabi ko: alam ko kung ano ang binubuo ko. At bumabalik ako doon, kahit matapos ng masamang Martes.
+
+Yun ang kaibahan ng surviving at designing your life.
+
+Hindi perfection ang goal. Ang goal ay clarity — yung malalim na pag-unawa sa kung bakit ka gumagawa ng ginagawa mo.
+
+Pagod ka ba? Overwhelmed? Normal lang yan.
+
+Pero mayroon ka bang planong babalikan pagkatapos ng masamang araw?
+
+Kung wala pa — yun ang magsisimula tayong pag-usapan dito. 🌿
+
+(Link sa article sa comments)</div>
+          <button class="copy-btn" onclick="copyText('w2-fb', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w2-li">
+          <div class="post-box" id="text-w2-li">I manage a team of agents, hold 600 client policies, and I'm raising a three-year-old.
+
+I get asked often: "How do you do it all?"
+
+The honest answer: I don't try to.
+
+What I've built instead is clarity — about what I'm building, why I'm building it, and what I will not compromise on, even in a hard week.
+
+In financial services, there's enormous pressure to appear as if you have everything together. Clients trust you with serious decisions. Your team looks to you for direction. The culture rewards visibility and growth.
+
+But the most effective leaders I've observed — and the most at-peace clients I've served — share one thing: they're not trying to do everything. They're trying to do the right things, consistently, over time.
+
+That's a design problem. Not a time management problem.
+
+If you're a professional trying to build something meaningful while holding a lot — you don't need more productivity hacks. You need a clearer picture of what you're actually building.
+
+That's the conversation I'm starting at Intentional Thrive.
+
+(Link in comments)</div>
+          <button class="copy-btn" onclick="copyText('w2-li', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w2-reel">
+          <div class="post-box" id="text-w2-reel">HOOK (text on screen):
+"How do you do it all?"
+
+VOICE-OVER:
+"Honestly? I don't.
+
+I manage a team. I have 600 clients under my care. I have a three-year-old who had a meltdown this morning over the color of his cup.
+
+And I've stopped trying to do it all.
+
+What I do instead is this: I know exactly what I'm building. I protect a few non-negotiables every week, no matter what. And I accept that it will be messy — because intentional and messy aren't opposites.
+
+Filipino women carry a lot. We're wired to say 'kaya ko' to everything. But there's a difference between surviving your life and designing it.
+
+I'm not here to be the woman who has it all together. I'm here to be the woman who knows what she's building — even on the hard Tuesdays.
+
+If that's the kind of life you want too, follow along. We're figuring this out together."
+
+END CARD:
+Intentional Thrive | intentionalthrive.com
+
+Visual direction: Morning routine — getting ready, coffee, Aki in background, planner open. Real, not staged.</div>
+          <button class="copy-btn" onclick="copyText('w2-reel', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w2-carousel">
+          <div class="post-box" id="text-w2-carousel">SLIDE 1:
+My Weekly Non-Negotiables as a Working Mom in Financial Services
+(Yes, even on the hard weeks)
+— Venus | Intentional Thrive
+
+SLIDE 2:
+Non-negotiable #1
+My planning time on Sunday night.
+15–20 minutes. Week mapped. Brain clear. Everything else follows.
+
+SLIDE 3:
+Non-negotiable #2
+My morning window before Aki wakes up.
+This is mine. Not for emails. Not for clients. Just mine.
+
+SLIDE 4:
+Non-negotiable #3
+One real conversation with Joe every week — not logistics, not schedules. Real.
+A strong marriage is part of the plan, not separate from it.
+
+SLIDE 5:
+Non-negotiable #4
+I review my own financial plan quarterly.
+I can't guide clients toward clarity I don't have myself.
+
+SLIDE 6:
+Non-negotiable #5
+I let some things be messy.
+Intentional living isn't perfect living. It's purposeful living.
+
+SLIDE 7 (CTA):
+What's your one non-negotiable this week?
+Drop it in the comments — I'd love to know. 💚
+Full article at intentionalthrive.com</div>
+          <button class="copy-btn" onclick="copyText('w2-carousel', this)">Copy</button>
+        </div>
+      </div>
+
+      <!-- ── WEEK 3 ── -->
+      <div class="week-panel" id="week-3">
+        <div class="week-header">
+          <h3>The Filipino Professional's Guide to Not Starting Over at 40</h3>
+          <p>Pillar: Wealth in Practice · intentionalthrive.com/blog/article-3</p>
+        </div>
+        <div class="post-tabs">
+          <div class="ptab active" onclick="showPost('w3', 'fb', this)">Facebook</div>
+          <div class="ptab" onclick="showPost('w3', 'li', this)">LinkedIn</div>
+          <div class="ptab" onclick="showPost('w3', 'reel', this)">Reel Script</div>
+          <div class="ptab" onclick="showPost('w3', 'carousel', this)">Carousel</div>
+        </div>
+
+        <div class="post-panel visible" id="w3-fb">
+          <div class="post-box" id="text-w3-fb">Tanong ko sa iyo, at sagutin mo ng totoo sa sarili mo:
+
+Kung tumigil ang iyong kita bukas — gaano katagal kaya mo?
+
+Isang buwan? Tatlo? Mas maikli pa?
+
+Hindi ito judgment. Ito ay katanungan na karamihan sa atin ay hindi gustong sagutin — dahil ang sagot ay hindi komportable.
+
+Kumikita tayo. Nagbibigay tayo sa pamilya. Nagse-celebrate tayo sa mga milestone. Maganda lahat yun.
+
+Pero minsan, walang natitirang pondo para sa sarili nating pundasyon.
+
+Ito ang pinakakaraniwang nakikita ko sa aking trabaho, sa lahat ng income level.
+
+Hindi pera ang problema. Ang kulang ay isang sistema — tatlong bagay na dapat nating itayo bago tayo magsisi sa 40.
+
+Gusto mong malaman ang tatlo?
+
+Basahin ang buong article sa intentionalthrive.com 🌿
+(Link sa comments)</div>
+          <button class="copy-btn" onclick="copyText('w3-fb', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w3-li">
+          <div class="post-box" id="text-w3-li">The most common financial gap I see among professionals isn't income.
+
+It's the distance between what they earn and what they've built.
+
+High salary. Thin safety net. No investment vehicle working quietly in the background. Income protection that either doesn't exist or was bought out of obligation — and never really understood.
+
+This isn't a discipline problem. It's a design problem.
+
+Nobody sat them down and said: "Before you optimize anything else, here are the three things you need in place."
+
+After years in financial services — and hundreds of client conversations — I've distilled it to three layers every professional should build before life forces the conversation.
+
+I wrote about all three this week on Intentional Thrive.
+
+Not a pitch. Not a product comparison. Just a clear, honest framework for where to start.
+
+Link in comments.
+
+(If you know someone who could use this, please share it forward.)</div>
+          <button class="copy-btn" onclick="copyText('w3-li', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w3-reel">
+          <div class="post-box" id="text-w3-reel">HOOK (text on screen):
+"If your income stopped today — how long could you survive?"
+
+VOICE-OVER:
+"Most professionals I know can't answer that question comfortably.
+
+Not because they're not earning. They are. But there's a difference between income and wealth.
+
+Income is the stream. Wealth is the reservoir you build from it.
+
+And most of us — especially in the Philippines — are so focused on keeping the stream flowing that we forget to build the reservoir.
+
+There are three things every Filipino professional needs in place before 40.
+
+One: protection for your income — because your ability to earn is your biggest financial asset.
+
+Two: an emergency fund that actually exists — not 'I'll figure it out,' but a real, separate, untouched fund.
+
+Three: something that grows without you — quietly compounding even when you're focused on everything else.
+
+You don't need to have all three perfectly in place today. But you need to start.
+
+The cost of waiting isn't just time. It's the growth you didn't get on the growth you didn't make."
+
+END CARD:
+Full article at intentionalthrive.com
+Intentional Thrive 🌿
+
+Visual direction: Clean desk setup or walking footage. Calm, professional energy.</div>
+          <button class="copy-btn" onclick="copyText('w3-reel', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w3-carousel">
+          <div class="post-box" id="text-w3-carousel">SLIDE 1:
+The 3-Layer Financial Foundation Every Filipino Professional Needs
+(Before life decides for you)
+— Venus | Intentional Thrive
+
+SLIDE 2:
+Layer 1: Protect Your Income
+Your greatest financial asset is not your savings.
+It's your ability to earn.
+Do you have something protecting it?
+
+SLIDE 3:
+What income protection looks like:
+✓ Life insurance (the right kind, structured for your life stage)
+✓ Coverage that kicks in when you can't work
+✓ A plan that doesn't collapse when something unexpected happens
+
+SLIDE 4:
+Layer 2: Emergency Fund
+3–6 months of your actual monthly expenses.
+Liquid. Separate. Untouched.
+Not a credit card. Not "I'll borrow." A real fund.
+
+SLIDE 5:
+Layer 3: Something That Grows Without You
+Not a savings account earning 0.1% a year.
+An investment vehicle that compounds over time — even when you're not watching.
+Consistency matters more than the amount.
+
+SLIDE 6:
+The honest truth:
+Most Filipino professionals have none of these fully in place.
+Not because they can't. Because no one sat down and walked them through it — clearly, without the sales pressure.
+That's what this space is for.
+
+SLIDE 7 (CTA):
+Which layer are you missing?
+Drop 1, 2, or 3 in the comments — no judgment, just honesty. 💚
+Full article at intentionalthrive.com</div>
+          <button class="copy-btn" onclick="copyText('w3-carousel', this)">Copy</button>
+        </div>
+      </div>
+
+      <!-- ── WEEK 4 ── -->
+      <div class="week-panel" id="week-4">
+        <div class="week-header">
+          <h3>What Life Insurance Actually Is (And Why Your Agent Never Explained It This Way)</h3>
+          <p>Pillar: Wealth in Practice · CTA: DM COVERAGE · intentionalthrive.com/blog/article-4</p>
+        </div>
+        <div class="post-tabs">
+          <div class="ptab active" onclick="showPost('w4', 'fb', this)">Facebook</div>
+          <div class="ptab" onclick="showPost('w4', 'li', this)">LinkedIn</div>
+          <div class="ptab" onclick="showPost('w4', 'reel', this)">Reel Script</div>
+          <div class="ptab" onclick="showPost('w4', 'carousel', this)">Carousel</div>
+        </div>
+
+        <div class="post-panel visible" id="w4-fb">
+          <div class="post-box" id="text-w4-fb">May clients akong may insurance na halos 5 years na — at ngayon ko lang nalaman na hindi pala nila alam kung ano talaga ang kasamang benefits ng kanilang policy.
+
+Hindi sila nagpabaya. Hindi sila tiamad.
+
+Hindi lang naipaliwanag ng maayos.
+
+Ito ang pinakamalaking problema ng aming industriya: nagbebenta tayo ng coverage nang hindi talaga ipinapaliwanag kung ano ang binibili.
+
+Ang insurance ay hindi lang para sa pagkamatay. Hindi ito bet laban sa iyong buhay. At hindi ito isang bagay na "pag-iisipan pa lang."
+
+Ito ang mekanismo para protektahan ang iyong financial plan — ang mortgage, ang anak, ang magulang, ang lahat ng pinagsisikapan mo — kapag nangyari ang hindi inaasahan.
+
+Ito ang tanong na palagi ko sinasabi sa mga kliyente:
+
+"Ano ang pinoprotektahan mo?"
+
+Kapag nalaman mo ang sagot doon — ang tamang insurance ay magiging malinaw.
+
+Kung gusto mong suriin kung ano ang meron ka ngayon, o magsimulang mag-usap — nandito ako. Walang presyur. Walang quota.
+
+DM mo ako o mag-comment ng "COVERAGE" 💚</div>
+          <button class="copy-btn" onclick="copyText('w4-fb', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w4-li">
+          <div class="post-box" id="text-w4-li">After years in financial services, here's the thing I'd change about how our industry communicates:
+
+We lead with fear or obligation. Almost never with understanding.
+
+"What if you die?" is not the right opening question.
+
+The right question is: "What are you protecting?"
+
+When a professional can answer that clearly — the mortgage, the children's education, an aging parent, an income their household depends on — the right financial structure becomes almost self-evident.
+
+When they can't, any product we recommend is just noise.
+
+I wrote an article this week that tries to reframe how life insurance is explained — not as a sales tool, but as a planning tool. What it is, how to think about it, and the question that should come before any recommendation.
+
+Not a pitch. Just the clearer version of a conversation this industry hasn't had enough of.
+
+Link in comments — share it if you think someone needs to read it.</div>
+          <button class="copy-btn" onclick="copyText('w4-li', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w4-reel">
+          <div class="post-box" id="text-w4-reel">HOOK (text on screen):
+"Nobody explains insurance like this."
+
+VOICE-OVER:
+"Most people buy life insurance because a friend asked them to.
+
+Most people who don't have it think they'll get to it later.
+
+Both groups are working with incomplete information.
+
+Here's the version nobody gave you:
+
+Insurance isn't a bet against your life. It's not a product you buy out of obligation. It's a mechanism for protecting your financial plan from the moments that would otherwise destroy it.
+
+It answers one question: if something happened to you today — what happens to everything you're supporting?
+
+The mortgage. The children. The parents. The business. The plan.
+
+Insurance is the answer you put in place before you need it. Because by the time you need it, it's too late.
+
+You don't have to figure out the right structure alone. That's what I'm here for.
+
+Link in bio — let's start with a real conversation."
+
+END CARD:
+Intentional Thrive | intentionalthrive.com
+DM me 'COVERAGE' to start.
+
+Visual direction: Simple, clean setting — desk or café. Confident, educational tone.</div>
+          <button class="copy-btn" onclick="copyText('w4-reel', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w4-carousel">
+          <div class="post-box" id="text-w4-carousel">SLIDE 1:
+What Your Policy Actually Covers vs. What You Think It Covers
+(Most people are surprised by this)
+— Venus | Intentional Thrive
+
+SLIDE 2:
+What most people think insurance is:
+A payout when you die.
+That's the most basic version. There's a lot more.
+
+SLIDE 3:
+What it can actually cover:
+✓ Income replacement if you can't work
+✓ Critical illness (cancer, stroke, heart attack)
+✓ Education fund for your children
+✓ Retirement component (in permanent coverage)
+✓ Estate and legacy planning
+
+SLIDE 4:
+The question your agent should have asked you:
+"What are you protecting?"
+Not what you can afford. Not what your neighbor got. What YOU are protecting.
+
+SLIDE 5:
+Term vs. Permanent — the honest version:
+Term: Maximum protection, lower cost, for a specific period. Best during high-responsibility years.
+Permanent (VUL): Lifelong coverage + investment component. Costs more. Does more.
+Neither is wrong. The wrong one is whichever you chose without understanding it.
+
+SLIDE 6:
+If any of this is new information:
+You didn't fail. You weren't told.
+The industry has a communication problem.
+This space is my attempt to fix that — one honest article at a time.
+
+SLIDE 7 (CTA):
+Do you know what your policy actually covers?
+DM me "COVERAGE" and let's find out together. No pitch. Just clarity. 💚
+intentionalthrive.com</div>
+          <button class="copy-btn" onclick="copyText('w4-carousel', this)">Copy</button>
+        </div>
+      </div>
+
+      <!-- ── WEEK 5 ── -->
+      <div class="week-panel" id="week-5">
+        <div class="week-header">
+          <h3>I'm Building This in Public. Here's Why.</h3>
+          <p>Pillar: The Journey · intentionalthrive.com/blog/article-5</p>
+        </div>
+        <div class="post-tabs">
+          <div class="ptab active" onclick="showPost('w5', 'fb', this)">Facebook</div>
+          <div class="ptab" onclick="showPost('w5', 'li', this)">LinkedIn</div>
+          <div class="ptab" onclick="showPost('w5', 'reel', this)">Reel Script</div>
+          <div class="ptab" onclick="showPost('w5', 'carousel', this)">Carousel</div>
+        </div>
+
+        <div class="post-panel visible" id="w5-fb">
+          <div class="post-box" id="text-w5-fb">May nagsabi sa akin dati: "Hintayin mo muna na maging handa ka bago ka magsimula."
+
+Matagal akong naniniwala doon.
+
+Ngayon, hindi na.
+
+Dahil ang "pagkahanda" ay hindi isang lugar na darating mo. Ito ay isang desisyon na gagawin mo.
+
+Kaya naman, itinayo ko ang Intentional Thrive — at pinili kong gawin ito nang hayagan.
+
+Hindi kasi ang pinaka-helpful na bagay na maoffer ko sa inyo ay isang perpektong buhay na financial.
+
+Ang pinaka-helpful ay katapatan — mula sa gitna ng paglalakbay.
+
+Isa akong unit manager. Mayroon akong team, mga kliyente, isang tatlong taong gulang na anak, at isang financial life na patuloy kong binubuo.
+
+Hindi ko pa lahat naiintindihan. Pero may direksyon ako. At pinili kong itayo ito nang hayagan — para makita ninyo kung paano talaga itong nangyayari.
+
+Kung handa ka na ring umalis sa drifting at magsimulang mag-design ng buhay mo sa sarili mong mga tuntunin —
+
+Nandito ang tamang lugar para sa iyo. 🌿
+
+(intentionalthrive.com — link sa bio)</div>
+          <button class="copy-btn" onclick="copyText('w5-fb', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w5-li">
+          <div class="post-box" id="text-w5-li">The financial services industry in the Philippines operates largely on image.
+
+The more polished you look, the more trust you earn. Vulnerability reads as instability. Uncertainty reads as incompetence.
+
+I understand why the culture is this way. I've participated in it.
+
+But I've also seen what happens when practitioners drop the performance — when they say "here's what I got wrong" or "here's what I'm still figuring out." The response isn't skepticism. It's relief. Recognition. Finally, someone who sounds like me.
+
+There is a significant unmet need in this market for financial guidance that doesn't feel like a pitch — that speaks honestly about money, mindset, and what building actually looks like from the inside of a busy professional life.
+
+That's the intent behind Intentional Thrive.
+
+I'm building it publicly because I believe the process is as valuable as the destination. And because the people I want to serve deserve honesty, not performance.
+
+If you're in financial services, or you work with the audience I'm describing — I'd love your thoughts. And if you know a Filipino professional who's ready for a different kind of financial conversation, please send this their way.
+
+(intentionalthrive.com — just getting started)</div>
+          <button class="copy-btn" onclick="copyText('w5-li', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w5-reel">
+          <div class="post-box" id="text-w5-reel">HOOK (text on screen or spoken):
+"I'm building something. And I'm doing it in public."
+
+VOICE-OVER:
+"There's something uncomfortable about starting something publicly.
+
+You're declaring an intention before you have proof it will work.
+
+You're choosing visibility over safety.
+
+In a culture where 'baka mapahiya' still carries a lot of weight — that's not a small thing.
+
+But here's what I kept coming back to:
+
+The most helpful thing I have to offer isn't expertise from a finished place.
+
+It's honesty from the middle of the journey.
+
+I'm a unit manager. I have a team. I have clients. I have a toddler and a marriage and financial goals I'm working toward.
+
+I don't have it all figured out. I have a direction. And I'm choosing to build it out loud.
+
+Intentional Thrive is for Filipino professionals who are done drifting and ready to design their financial lives on their own terms.
+
+If that's you — you're in the right place. Welcome."
+
+END CARD:
+Intentional Thrive 🌿
+intentionalthrive.com
+Follow along ↓
+
+Visual direction: You walking or sitting — movement and intention. This is the one where your face matters most if you're ready.</div>
+          <button class="copy-btn" onclick="copyText('w5-reel', this)">Copy</button>
+        </div>
+
+        <div class="post-panel" id="w5-carousel">
+          <div class="post-box" id="text-w5-carousel">SLIDE 1:
+The Intentional Thrive Roadmap
+What I'm building — and why I'm doing it in public
+— Venus
+
+SLIDE 2:
+Why build in public?
+Because the most useful thing I have to offer isn't expertise from a finished place.
+It's honesty from the middle of the journey.
+
+SLIDE 3:
+What Intentional Thrive is:
+A space for Filipino professionals who are done drifting and ready to design their financial lives on their own terms.
+Not just the products. The mindset behind the products.
+
+SLIDE 4:
+What you'll find here:
+✓ Money mindset — the story underneath your decisions
+✓ Wealth in practice — insurance and investing, explained clearly
+✓ Intentional living — designing your life, not just surviving it
+✓ The journey — real wins, real lessons, no performance
+
+SLIDE 5:
+What this is NOT:
+✗ A sales funnel disguised as content
+✗ A highlight reel of a perfect financial life
+✗ Generic advice that could apply to anyone
+This is specific. This is honest. This is for you.
+
+SLIDE 6:
+If you've been waiting for the right time:
+To fix your finances. To start that investment. To finally understand what you own.
+The right time is not a date. It's a decision.
+
+SLIDE 7 (CTA):
+Welcome to Intentional Thrive. 🌿
+Follow along. Ask questions. Share this with someone who needs it.
+intentionalthrive.com</div>
+          <button class="copy-btn" onclick="copyText('w5-carousel', this)">Copy</button>
+        </div>
+      </div>
+
+    </div><!-- /right card -->
+
+  </div><!-- /grid -->
+</div><!-- /wrap -->
+
+<div class="footer">
+  Intentional Thrive Content HQ · Updated June 23, 2026 · Private use only
+</div>
+
+<script>
+  // ─── WEEK TABS ───
+  function showWeek(idx, el) {
+    document.querySelectorAll('.week-panel').forEach(p => p.classList.remove('visible'));
+    document.querySelectorAll('.wtab').forEach(t => t.classList.remove('active'));
+    document.getElementById('week-' + idx).classList.add('visible');
+    el.classList.add('active');
+  }
+
+  // ─── POST TABS ───
+  function showPost(weekPrefix, postKey, el) {
+    const allPanels = el.closest('.week-panel').querySelectorAll('.post-panel');
+    const allTabs   = el.closest('.post-tabs').querySelectorAll('.ptab');
+    allPanels.forEach(p => p.classList.remove('visible'));
+    allTabs.forEach(t => t.classList.remove('active'));
+    document.getElementById(weekPrefix + '-' + postKey).classList.add('visible');
+    el.classList.add('active');
+  }
+
+  // ─── COPY ───
+  function copyText(id, btn) {
+    const text = document.getElementById('text-' + id).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // ─── CHECKLIST PERSIST ───
+  document.querySelectorAll('.chk').forEach(chk => {
+    const idx = chk.dataset.idx;
+    const key = 'chk_' + idx;
+    if (localStorage.getItem(key) === '1') {
+      chk.classList.add('done');
+      const lbl = chk.nextElementSibling;
+      if (lbl) lbl.classList.add('struck');
+    }
+    chk.addEventListener('click', () => {
+      chk.classList.toggle('done');
+      const lbl = chk.nextElementSibling;
+      if (lbl) lbl.classList.toggle('struck');
+      localStorage.setItem(key, chk.classList.contains('done') ? '1' : '');
+    });
+  });
+</script>
+
+</body>
+</html>
