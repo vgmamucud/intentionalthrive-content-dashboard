@@ -1181,11 +1181,28 @@ async function saveOllamaUrl(){
   OLLAMA_PROXY = raw;
   localStorage.setItem('ollama_url', raw);
   msg.style.color='var(--muted)'; msg.textContent='Testing connection...';
-  await checkOllama();
-  if(ollamaOnline){
-    msg.style.color='#1a6630'; msg.textContent='✓ Connected! You can now use ✦ Generate on any idea.';
-  } else {
-    msg.style.color='#b03030'; msg.textContent='✗ Could not connect. Check your ngrok URL and make sure Ollama is running.';
+  try {
+    const r = await fetch(raw+'/api/tags', { signal: AbortSignal.timeout(6000) });
+    const txt = await r.text();
+    if(r.ok){
+      ollamaOnline = true;
+      const badge = document.getElementById('ollama-status');
+      badge.className = 'ollama-badge ollama-ok';
+      let modelName = 'unknown';
+      try {
+        const data = JSON.parse(txt);
+        const models = (data.models||[]).map(m=>m.name);
+        const preferred = ['gemma4','gemma4:latest','qwen3.5','qwen3.5:latest','gemma3','llama3','mistral'];
+        modelName = preferred.find(p=>models.some(m=>m.startsWith(p.split(':')[0]))) || models[0] || 'unknown';
+        window._ollamaModel = modelName;
+      } catch(e){}
+      badge.innerHTML = '<span class="dot"></span> Ollama online · '+modelName;
+      msg.style.color='#1a6630'; msg.textContent='✓ Connected! Model: '+modelName+'. You can now use ✦ Generate.';
+    } else {
+      msg.style.color='#b03030'; msg.textContent='✗ HTTP '+r.status+': '+txt.substring(0,120);
+    }
+  } catch(e){
+    msg.style.color='#b03030'; msg.textContent='✗ Error: '+e.message;
   }
 }
 function resetOllamaUrl(){
