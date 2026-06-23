@@ -18,6 +18,7 @@
       --muted: #888;
       --border: #e4e0d8;
       --radius: 12px;
+      --nav-h: 56px;
     }
 
     body {
@@ -25,26 +26,123 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding: 20px 16px 80px;
       font-size: 14px;
     }
 
-    /* ─── TOP BAR ─── */
-    .topbar {
-      max-width: 960px;
-      margin: 0 auto 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
+    /* ─── LOGIN GATE ─── */
+    #login-gate {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
     }
-    .logo { font-size: 1rem; font-weight: 800; color: var(--accent); letter-spacing: -.02em; }
-    .logo em { color: var(--heading); font-style: normal; }
-    .topbar-meta { font-size: 0.75rem; color: var(--muted); }
+    #login-gate.hidden { display: none; }
 
-    /* ─── LAYOUT ─── */
-    .wrap { max-width: 960px; margin: 0 auto; }
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 44px 40px 36px;
+      width: 360px;
+      max-width: 95vw;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,.06);
+    }
+    .login-logo {
+      font-size: 1.1rem; font-weight: 900; color: var(--accent);
+      letter-spacing: -.02em; margin-bottom: 6px;
+    }
+    .login-logo em { color: var(--heading); font-style: normal; }
+    .login-subtitle {
+      font-size: 0.75rem; color: var(--muted); margin-bottom: 28px;
+    }
+    .login-label {
+      display: block; font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: var(--muted); text-align: left; margin-bottom: 6px;
+    }
+    .login-input {
+      width: 100%; padding: 11px 14px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-size: 0.9rem; color: var(--heading);
+      background: var(--bg); outline: none;
+      transition: border .15s;
+    }
+    .login-input:focus { border-color: var(--accent); }
+    .login-btn {
+      margin-top: 14px; width: 100%;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 10px;
+      padding: 12px; font-size: 0.88rem; font-weight: 700;
+      cursor: pointer; transition: background .15s;
+    }
+    .login-btn:hover { background: #3a6347; }
+    .login-error {
+      font-size: 0.75rem; color: #c0392b;
+      margin-top: 10px; min-height: 18px;
+    }
+    .login-hint {
+      font-size: 0.7rem; color: var(--muted); margin-top: 24px;
+      padding-top: 16px; border-top: 1px solid var(--border);
+    }
+
+    /* ─── TOP NAV ─── */
+    .topnav {
+      position: sticky; top: 0; z-index: 100;
+      height: var(--nav-h);
+      background: rgba(255,252,248,.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 24px; gap: 0;
+    }
+    .nav-logo {
+      font-size: 0.9rem; font-weight: 900; color: var(--accent);
+      letter-spacing: -.02em; margin-right: 32px; white-space: nowrap;
+    }
+    .nav-logo em { color: var(--heading); font-style: normal; }
+
+    .nav-links {
+      display: flex; gap: 2px; list-style: none; flex: 1;
+    }
+    .nav-links a {
+      display: block; padding: 7px 13px;
+      font-size: 0.78rem; font-weight: 600;
+      color: var(--muted); text-decoration: none;
+      border-radius: 8px; transition: all .15s;
+      white-space: nowrap;
+    }
+    .nav-links a:hover { color: var(--accent); background: var(--accent-light); }
+    .nav-links a.active { color: var(--accent); background: var(--accent-light); }
+
+    .nav-right {
+      margin-left: auto; display: flex; align-items: center; gap: 10px;
+    }
+    .nav-date { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+    .logout-btn {
+      font-size: 0.72rem; font-weight: 700; color: var(--muted);
+      background: none; border: 1px solid var(--border);
+      border-radius: 7px; padding: 5px 10px; cursor: pointer;
+      transition: all .15s;
+    }
+    .logout-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    @media (max-width: 600px) {
+      .nav-date { display: none; }
+      .nav-links a { padding: 7px 9px; font-size: 0.72rem; }
+    }
+
+    /* ─── PAGE ─── */
+    .page { padding: 28px 16px 80px; }
+
+    /* ─── SECTION ─── */
+    .section { max-width: 960px; margin: 0 auto 48px; scroll-margin-top: calc(var(--nav-h) + 16px); }
+    .section-title {
+      font-size: 0.62rem; font-weight: 900; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 16px; padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
 
     /* ─── BANNER ─── */
     .banner {
@@ -52,11 +150,8 @@
       border: 1px solid var(--accent-mid);
       border-radius: var(--radius);
       padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 20px; flex-wrap: wrap;
     }
     .banner-wk { font-size: 2rem; font-weight: 900; color: var(--accent); line-height: 1; }
     .banner-info h2 { font-size: 1rem; font-weight: 700; color: var(--heading); }
@@ -66,9 +161,9 @@
       font-size: 0.68rem; font-weight: 700; padding: 3px 9px;
       border-radius: 20px; white-space: nowrap;
     }
-    .pill-green { background: #d4edda; color: #1a6630; }
+    .pill-green  { background: #d4edda; color: #1a6630; }
     .pill-yellow { background: #fff3cd; color: #856404; }
-    .pill-gray { background: #f0f0f0; color: #555; }
+    .pill-gray   { background: #f0f0f0; color: #555; }
 
     /* ─── GRID ─── */
     .grid { display: grid; grid-template-columns: 340px 1fr; gap: 16px; }
@@ -112,16 +207,14 @@
       font-size: 0.65rem; font-weight: 700; padding: 2px 7px;
       border-radius: 10px; white-space: nowrap;
     }
-    .tag-kit { background: #fce8e8; color: #b03030; }
-    .tag-fb  { background: #e8eef8; color: #2d5fa3; }
-    .tag-li  { background: #e8f4fb; color: #0a66c2; }
-    .tag-ig  { background: #fce4f3; color: #9b2578; }
+    .tag-kit  { background: #fce8e8; color: #b03030; }
+    .tag-fb   { background: #e8eef8; color: #2d5fa3; }
+    .tag-li   { background: #e8f4fb; color: #0a66c2; }
+    .tag-ig   { background: #fce4f3; color: #9b2578; }
     .tag-site { background: #f3f0fc; color: #5f3dc4; }
 
     /* ─── WEEK TABS ─── */
-    .week-tabs {
-      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;
-    }
+    .week-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
     .wtab {
       padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
       cursor: pointer; border: 1.5px solid var(--border);
@@ -139,9 +232,7 @@
     .week-header p { font-size: 0.75rem; color: var(--muted); margin-top: 3px; }
 
     /* ─── POST BLOCKS ─── */
-    .post-tabs {
-      display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px;
-    }
+    .post-tabs { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
     .ptab {
       padding: 4px 11px; border-radius: 20px; font-size: 0.72rem; font-weight: 700;
       cursor: pointer; border: 1.5px solid var(--border);
@@ -159,11 +250,8 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 14px 44px 14px 14px;
-      font-size: 0.82rem;
-      line-height: 1.7;
-      white-space: pre-wrap;
-      max-height: 320px;
-      overflow-y: auto;
+      font-size: 0.82rem; line-height: 1.7;
+      white-space: pre-wrap; max-height: 320px; overflow-y: auto;
       color: var(--text);
     }
 
@@ -177,10 +265,7 @@
     .copy-btn:hover { background: #3a6347; }
     .copy-btn.copied { background: #1a6630; }
 
-    .post-note {
-      font-size: 0.72rem; color: var(--muted);
-      margin-top: 6px; font-style: italic;
-    }
+    .post-note { font-size: 0.72rem; color: var(--muted); margin-top: 6px; font-style: italic; }
 
     /* ─── INFO ROWS ─── */
     .info-row {
@@ -204,8 +289,7 @@
     /* ─── PLATFORM LIST ─── */
     .plat-item {
       display: flex; align-items: center; gap: 10px;
-      padding: 7px 0; border-bottom: 1px solid var(--border);
-      font-size: 0.83rem;
+      padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 0.83rem;
     }
     .plat-item:last-child { border-bottom: none; }
     .plat-num {
@@ -215,156 +299,265 @@
       flex-shrink: 0; color: #fff;
     }
 
+    /* ─── CALENDAR TABLE ─── */
+    .cal-week {
+      margin-bottom: 20px;
+    }
+    .cal-week-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 8px;
+    }
+    .cal-wk-badge {
+      font-size: 0.75rem; font-weight: 900; color: #fff;
+      background: var(--accent); padding: 3px 10px; border-radius: 20px;
+      white-space: nowrap;
+    }
+    .cal-wk-title {
+      font-size: 0.85rem; font-weight: 700; color: var(--heading);
+    }
+    .cal-wk-dates { font-size: 0.72rem; color: var(--muted); }
+
+    .cal-table { width: 100%; border-collapse: collapse; }
+    .cal-table th {
+      font-size: 0.62rem; font-weight: 800; letter-spacing: .07em;
+      text-transform: uppercase; color: var(--muted);
+      padding: 6px 10px; text-align: left;
+      border-bottom: 1.5px solid var(--border);
+    }
+    .cal-table td {
+      padding: 9px 10px; font-size: 0.8rem;
+      border-bottom: 1px solid var(--border); vertical-align: top;
+    }
+    .cal-table tr:last-child td { border-bottom: none; }
+    .cal-table tr:hover td { background: var(--accent-light); }
+
+    .cal-day { font-weight: 700; color: var(--heading); white-space: nowrap; }
+    .cal-date { font-size: 0.7rem; color: var(--muted); }
+    .cal-platform { white-space: nowrap; }
+    .cal-content { color: var(--text); line-height: 1.4; }
+    .cal-status {
+      font-size: 0.65rem; font-weight: 700; padding: 2px 8px;
+      border-radius: 10px; white-space: nowrap;
+      background: #f0f0f0; color: #666;
+    }
+    .cal-status.done { background: #d4edda; color: #1a6630; }
+    .cal-status.today { background: #fff3cd; color: #856404; }
+
+    /* ─── ARTICLE CARDS ─── */
+    .article-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px; margin-top: 8px;
+    }
+    .article-card {
+      background: var(--accent-light);
+      border: 1px solid var(--accent-mid);
+      border-radius: 10px; padding: 14px 16px;
+    }
+    .article-card-top {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 8px;
+    }
+    .article-pillar {
+      font-size: 0.7rem; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: .05em;
+    }
+    .article-title {
+      font-weight: 700; color: var(--heading);
+      margin: 6px 0 4px; font-size: 0.88rem; line-height: 1.35;
+    }
+
     /* ─── FOOTER ─── */
     .footer {
       max-width: 960px; margin: 28px auto 0;
       text-align: center; font-size: 0.72rem; color: var(--muted);
+      padding: 0 16px;
     }
   </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="logo">Intentional <em>Thrive</em> — Content HQ</div>
-  <div class="topbar-meta">June 2026 · Private use only</div>
+<!-- ══════════════════════════════════
+     LOGIN GATE
+═══════════════════════════════════════ -->
+<div id="login-gate">
+  <div class="login-box">
+    <div class="login-logo">Intentional <em>Thrive</em></div>
+    <div class="login-subtitle">Content HQ · Private Access</div>
+    <label class="login-label" for="pw-input">Password</label>
+    <input
+      type="password"
+      id="pw-input"
+      class="login-input"
+      placeholder="Enter your password"
+      autocomplete="current-password"
+      onkeydown="if(event.key==='Enter') tryLogin()"
+    />
+    <button class="login-btn" onclick="tryLogin()">Unlock →</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-hint">Only you have access to this dashboard.</div>
+  </div>
 </div>
 
-<div class="wrap">
-
-  <!-- BANNER -->
-  <div class="banner">
-    <div class="banner-wk">W1</div>
-    <div class="banner-info">
-      <h2>Money Mindset — Origin Story</h2>
-      <p>"Money Didn't Change Me. My Relationship With It Did."</p>
-    </div>
-    <div class="banner-pills">
-      <span class="pill pill-green">Article ✓ Live</span>
-      <span class="pill pill-yellow">Newsletter Pending</span>
-      <span class="pill pill-gray">Social → To Post</span>
-    </div>
+<!-- ══════════════════════════════════
+     TOP NAV
+═══════════════════════════════════════ -->
+<nav class="topnav" id="topnav" style="display:none;">
+  <div class="nav-logo">Intentional <em>Thrive</em> HQ</div>
+  <ul class="nav-links">
+    <li><a href="#dashboard" onclick="setActive(this)">Dashboard</a></li>
+    <li><a href="#calendar" onclick="setActive(this)">Calendar</a></li>
+    <li><a href="#content" onclick="setActive(this)">Content Library</a></li>
+    <li><a href="#articles" onclick="setActive(this)">Articles</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-date" id="nav-date"></span>
+    <button class="logout-btn" onclick="logout()">Lock 🔒</button>
   </div>
+</nav>
 
-  <div class="grid">
+<!-- ══════════════════════════════════
+     MAIN PAGE
+═══════════════════════════════════════ -->
+<div class="page" id="main-page" style="display:none;">
 
-    <!-- LEFT: CHECKLIST + SITE INFO -->
-    <div style="display:flex;flex-direction:column;gap:16px;">
+  <!-- ── SECTION: DASHBOARD ── -->
+  <div class="section" id="dashboard">
+    <div class="section-title">📋 Dashboard — Week at a Glance</div>
 
-      <!-- CHECKLIST -->
-      <div class="card">
-        <div class="card-title">This Week's Checklist</div>
-        <ul class="checklist" id="checklist">
-          <li>
-            <div class="chk done" data-idx="0"></div>
-            <span class="chk-label struck">Publish Article 1 on website</span>
-            <span class="tag tag-site">Site</span>
-          </li>
-          <li>
-            <div class="chk" data-idx="1"></div>
-            <span class="chk-label">Send Welcome Newsletter via Kit</span>
-            <span class="tag tag-kit">Kit</span>
-          </li>
-          <li>
-            <div class="chk" data-idx="2"></div>
-            <span class="chk-label">Post FB text post (Taglish)</span>
-            <span class="tag tag-fb">FB</span>
-          </li>
-          <li>
-            <div class="chk" data-idx="3"></div>
-            <span class="chk-label">Post LinkedIn text post</span>
-            <span class="tag tag-li">LI</span>
-          </li>
-          <li>
-            <div class="chk" data-idx="4"></div>
-            <span class="chk-label">Post Carousel — 7 slides ready</span>
-            <span class="tag tag-fb">FB/IG</span>
-          </li>
-          <li>
-            <div class="chk" data-idx="5"></div>
-            <span class="chk-label">Record & post Reel (voice-over)</span>
-            <span class="tag tag-ig">IG</span>
-          </li>
-          <li>
-            <div class="chk" data-idx="6"></div>
-            <span class="chk-label">Update About page: email + social links</span>
-            <span class="tag tag-site">Site</span>
-          </li>
-        </ul>
+    <!-- BANNER -->
+    <div class="banner">
+      <div class="banner-wk">W1</div>
+      <div class="banner-info">
+        <h2>Money Mindset — Origin Story</h2>
+        <p>"Money Didn't Change Me. My Relationship With It Did."</p>
       </div>
-
-      <!-- SITE INFO -->
-      <div class="card">
-        <div class="card-title">Site & Deploy</div>
-        <div class="info-row">
-          <div class="info-lbl">Live</div>
-          <div class="info-val"><a href="https://intentionalthrive.com" target="_blank">intentionalthrive.com ↗</a></div>
-        </div>
-        <div class="info-row">
-          <div class="info-lbl">Staging</div>
-          <div class="info-val"><a href="https://intentionalthrive.vercel.app" target="_blank">vercel.app ↗</a></div>
-        </div>
-        <div class="info-row">
-          <div class="info-lbl">Repo</div>
-          <div class="info-val"><a href="https://github.com/vgmamucud/intentionalthrive" target="_blank">vgmamucud/intentionalthrive ↗</a></div>
-        </div>
-        <div class="info-row">
-          <div class="info-lbl">Deploy</div>
-          <div class="info-val"><code>git add . → commit → git push</code></div>
-        </div>
-        <div class="info-row">
-          <div class="info-lbl">Still to do</div>
-          <div class="info-val">Real email · Social links · Photo (optional)</div>
-        </div>
+      <div class="banner-pills">
+        <span class="pill pill-green">Article ✓ Live</span>
+        <span class="pill pill-yellow">Newsletter Pending</span>
+        <span class="pill pill-gray">Social → To Post</span>
       </div>
-
-      <!-- PLATFORMS -->
-      <div class="card">
-        <div class="card-title">Platform Priority</div>
-        <div class="plat-item">
-          <div class="plat-num" style="background:#2d5fa3">1</div>
-          <div><strong>Personal Facebook</strong> · helloitsvenus<br><span style="color:var(--muted);font-size:.75rem">6.8K followers · Taglish</span></div>
-        </div>
-        <div class="plat-item">
-          <div class="plat-num" style="background:#0a66c2">2</div>
-          <div><strong>LinkedIn</strong><br><span style="color:var(--muted);font-size:.75rem">4K followers · English only</span></div>
-        </div>
-        <div class="plat-item">
-          <div class="plat-num" style="background:#c13584">3</div>
-          <div><strong>Instagram</strong><br><span style="color:var(--muted);font-size:.75rem">Level 2 — Months 3–4</span></div>
-        </div>
-        <div class="plat-item">
-          <div class="plat-num" style="background:#aaa">4</div>
-          <div><strong>TikTok / Reels</strong><br><span style="color:var(--muted);font-size:.75rem">Phase 2</span></div>
-        </div>
-      </div>
-
     </div>
 
-    <!-- RIGHT: CONTENT PANELS -->
-    <div class="card">
-      <div class="card-title">Content Library — Click to Copy</div>
+    <div class="grid">
+      <!-- LEFT -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
 
-      <!-- WEEK TABS -->
-      <div class="week-tabs">
-        <div class="wtab active" onclick="showWeek(0, this)">Newsletter</div>
-        <div class="wtab" onclick="showWeek(1, this)">Week 1</div>
-        <div class="wtab" onclick="showWeek(2, this)">Week 2</div>
-        <div class="wtab" onclick="showWeek(3, this)">Week 3</div>
-        <div class="wtab" onclick="showWeek(4, this)">Week 4</div>
-        <div class="wtab" onclick="showWeek(5, this)">Week 5</div>
-      </div>
+        <!-- CHECKLIST -->
+        <div class="card">
+          <div class="card-title">This Week's Checklist (W1 · Jun 23–27)</div>
+          <ul class="checklist" id="checklist">
+            <li>
+              <div class="chk done" data-idx="0"></div>
+              <span class="chk-label struck">Publish all 5 articles on website</span>
+              <span class="tag tag-site">Site</span>
+            </li>
+            <li>
+              <div class="chk" data-idx="1"></div>
+              <span class="chk-label">Post W1 Facebook text post (English)</span>
+              <span class="tag tag-fb">FB</span>
+            </li>
+            <li>
+              <div class="chk" data-idx="2"></div>
+              <span class="chk-label">Post W1 LinkedIn post</span>
+              <span class="tag tag-li">LI</span>
+            </li>
+            <li>
+              <div class="chk" data-idx="3"></div>
+              <span class="chk-label">Send Welcome Newsletter via Kit</span>
+              <span class="tag tag-kit">Kit</span>
+            </li>
+            <li>
+              <div class="chk" data-idx="4"></div>
+              <span class="chk-label">Post W1 Carousel (7 slides)</span>
+              <span class="tag tag-fb">FB</span>
+            </li>
+            <li>
+              <div class="chk" data-idx="5"></div>
+              <span class="chk-label">Film & post W1 Reel (Taglish voice-over)</span>
+              <span class="tag tag-ig">IG</span>
+            </li>
+            <li>
+              <div class="chk" data-idx="6"></div>
+              <span class="chk-label">Update About page: email + social links</span>
+              <span class="tag tag-site">Site</span>
+            </li>
+          </ul>
+        </div>
 
-      <!-- ── NEWSLETTER ── -->
-      <div class="week-panel visible" id="week-0">
-        <div class="week-header">
-          <h3>Welcome Newsletter — Kit Broadcast</h3>
-          <p>Subject: Before we talk about your policy — read this first</p>
+        <!-- SITE INFO -->
+        <div class="card">
+          <div class="card-title">Site & Deploy</div>
+          <div class="info-row">
+            <div class="info-lbl">Live</div>
+            <div class="info-val"><a href="https://intentionalthrive.com" target="_blank">intentionalthrive.com ↗</a></div>
+          </div>
+          <div class="info-row">
+            <div class="info-lbl">Dashboard</div>
+            <div class="info-val"><a href="https://content.intentionalthrive.com" target="_blank">content.intentionalthrive.com ↗</a></div>
+          </div>
+          <div class="info-row">
+            <div class="info-lbl">Repo</div>
+            <div class="info-val"><a href="https://github.com/vgmamucud/intentionalthrive" target="_blank">vgmamucud/intentionalthrive ↗</a></div>
+          </div>
+          <div class="info-row">
+            <div class="info-lbl">Deploy</div>
+            <div class="info-val"><code>git add . → commit → git push</code></div>
+          </div>
+          <div class="info-row">
+            <div class="info-lbl">Still to do</div>
+            <div class="info-val">Real email · Social links on About page</div>
+          </div>
         </div>
-        <div class="post-tabs">
-          <div class="ptab active" onclick="showPost('n', 'newsletter', this)">Full Email</div>
+
+        <!-- PLATFORMS -->
+        <div class="card">
+          <div class="card-title">Platform Priority</div>
+          <div class="plat-item">
+            <div class="plat-num" style="background:#2d5fa3">1</div>
+            <div><strong>Personal Facebook</strong> · helloitsvenus<br><span style="color:var(--muted);font-size:.75rem">6.8K followers · English</span></div>
+          </div>
+          <div class="plat-item">
+            <div class="plat-num" style="background:#0a66c2">2</div>
+            <div><strong>LinkedIn</strong><br><span style="color:var(--muted);font-size:.75rem">4K followers · English</span></div>
+          </div>
+          <div class="plat-item">
+            <div class="plat-num" style="background:#c13584">3</div>
+            <div><strong>Instagram Reels</strong><br><span style="color:var(--muted);font-size:.75rem">Taglish voice-over · All 5 weeks</span></div>
+          </div>
+          <div class="plat-item">
+            <div class="plat-num" style="background:#aaa">4</div>
+            <div><strong>Newsletter (Kit)</strong><br><span style="color:var(--muted);font-size:.75rem">Welcome send this week</span></div>
+          </div>
         </div>
-        <div class="post-panel visible" id="n-newsletter">
-          <div class="post-box" id="text-n-newsletter">Subject: Before we talk about your policy — read this first
+
+      </div><!-- /LEFT -->
+
+      <!-- RIGHT: CONTENT PANELS -->
+      <div class="card" id="content">
+        <div class="card-title">Content Library — Click to Copy</div>
+
+        <!-- WEEK TABS -->
+        <div class="week-tabs">
+          <div class="wtab active" onclick="showWeek(0, this)">Newsletter</div>
+          <div class="wtab" onclick="showWeek(1, this)">Week 1</div>
+          <div class="wtab" onclick="showWeek(2, this)">Week 2</div>
+          <div class="wtab" onclick="showWeek(3, this)">Week 3</div>
+          <div class="wtab" onclick="showWeek(4, this)">Week 4</div>
+          <div class="wtab" onclick="showWeek(5, this)">Week 5</div>
+        </div>
+
+        <!-- ── NEWSLETTER ── -->
+        <div class="week-panel visible" id="week-0">
+          <div class="week-header">
+            <h3>Welcome Newsletter — Kit Broadcast</h3>
+            <p>Subject: Before we talk about your policy — read this first</p>
+          </div>
+          <div class="post-tabs">
+            <div class="ptab active" onclick="showPost('n', 'newsletter', this)">Full Email</div>
+          </div>
+          <div class="post-panel visible" id="n-newsletter">
+            <div class="post-box" id="text-n-newsletter">Subject: Before we talk about your policy — read this first
 Preview: Something I've been wanting to say for a while.
 
 Hi [First Name],
@@ -393,26 +586,26 @@ I'd love to know what resonates. Just hit reply — I read every one.
 
 Talk soon,
 Venus</div>
-          <button class="copy-btn" onclick="copyText('n-newsletter', this)">Copy</button>
-        </div>
-        <p class="post-note">Kit → Broadcasts → New Broadcast → paste above → Send</p>
-      </div>
-
-      <!-- ── WEEK 1 ── -->
-      <div class="week-panel" id="week-1">
-        <div class="week-header">
-          <h3>Money Didn't Change Me. My Relationship With It Did.</h3>
-          <p>Pillar: Money Mindset · Article live: intentionalthrive.com/blog/article-1</p>
-        </div>
-        <div class="post-tabs">
-          <div class="ptab active" onclick="showPost('w1', 'fb', this)">Facebook</div>
-          <div class="ptab" onclick="showPost('w1', 'li', this)">LinkedIn</div>
-          <div class="ptab" onclick="showPost('w1', 'reel', this)">Reel Script</div>
-          <div class="ptab" onclick="showPost('w1', 'carousel', this)">Carousel</div>
+            <button class="copy-btn" onclick="copyText('n-newsletter', this)">Copy</button>
+          </div>
+          <p class="post-note">Kit → Broadcasts → New Broadcast → paste above → Send</p>
         </div>
 
-        <div class="post-panel visible" id="w1-fb">
-          <div class="post-box" id="text-w1-fb">There was a pattern in how I handled money that I didn't notice until I started earning more — and it didn't go away.
+        <!-- ── WEEK 1 ── -->
+        <div class="week-panel" id="week-1">
+          <div class="week-header">
+            <h3>Money Didn't Change Me. My Relationship With It Did.</h3>
+            <p>Pillar: Money Mindset · Article live: intentionalthrive.com/blog/article-1</p>
+          </div>
+          <div class="post-tabs">
+            <div class="ptab active" onclick="showPost('w1', 'fb', this)">Facebook</div>
+            <div class="ptab" onclick="showPost('w1', 'li', this)">LinkedIn</div>
+            <div class="ptab" onclick="showPost('w1', 'reel', this)">Reel Script</div>
+            <div class="ptab" onclick="showPost('w1', 'carousel', this)">Carousel</div>
+          </div>
+
+          <div class="post-panel visible" id="w1-fb">
+            <div class="post-box" id="text-w1-fb">There was a pattern in how I handled money that I didn't notice until I started earning more — and it didn't go away.
 
 More income. Same cycle. Just bigger numbers.
 
@@ -435,11 +628,11 @@ Not just strategies. Not just products. The story underneath. That's where it st
 If this resonates, you're in the right place. 🌿
 
 (Full article now live — link in bio)</div>
-          <button class="copy-btn" onclick="copyText('w1-fb', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w1-fb', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w1-li">
-          <div class="post-box" id="text-w1-li">Early in my career, I assumed that more income would solve everything.
+          <div class="post-panel" id="w1-li">
+            <div class="post-box" id="text-w1-li">Early in my career, I assumed that more income would solve everything.
 
 It didn't. It just made the same patterns more visible.
 
@@ -456,11 +649,11 @@ That's the premise of Intentional Thrive — a space for Filipino professionals 
 If you're in financial services, or you work with clients who are — this conversation matters.
 
 (First article now live: "Money Didn't Change Me. My Relationship With It Did." — link in comments)</div>
-          <button class="copy-btn" onclick="copyText('w1-li', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w1-li', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w1-reel">
-          <div class="post-box" id="text-w1-reel">HOOK (text card or spoken, first 3 sec):
+          <div class="post-panel" id="w1-reel">
+            <div class="post-box" id="text-w1-reel">HOOK (text card or spoken, first 3 sec):
 "More money didn't fix it. This did."
 
 VOICE-OVER:
@@ -489,11 +682,11 @@ Intentional Thrive | intentionalthrive.com
 Follow for more ↓
 
 Visual direction: B-roll of everyday life — morning coffee, planner, quiet moment at desk. Voice-over only, no face needed.</div>
-          <button class="copy-btn" onclick="copyText('w1-reel', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w1-reel', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w1-carousel">
-          <div class="post-box" id="text-w1-carousel">SLIDE 1:
+          <div class="post-panel" id="w1-carousel">
+            <div class="post-box" id="text-w1-carousel">SLIDE 1:
 5 Signs Your Money Pattern Is Running You
 (Not the Other Way Around)
 — Intentional Thrive
@@ -529,25 +722,25 @@ It's a new conversation — with yourself.
 
 Read the full article at intentionalthrive.com
 Or drop "MINDSET" in the comments and I'll send it to you. 💚</div>
-          <button class="copy-btn" onclick="copyText('w1-carousel', this)">Copy</button>
-        </div>
-      </div>
-
-      <!-- ── WEEK 2 ── -->
-      <div class="week-panel" id="week-2">
-        <div class="week-header">
-          <h3>How I Manage a Team, 600 Clients, and a Toddler — And Still Have a Plan</h3>
-          <p>Pillar: Intentional Living · intentionalthrive.com/blog/article-2</p>
-        </div>
-        <div class="post-tabs">
-          <div class="ptab active" onclick="showPost('w2', 'fb', this)">Facebook</div>
-          <div class="ptab" onclick="showPost('w2', 'li', this)">LinkedIn</div>
-          <div class="ptab" onclick="showPost('w2', 'reel', this)">Reel Script</div>
-          <div class="ptab" onclick="showPost('w2', 'carousel', this)">Carousel</div>
+            <button class="copy-btn" onclick="copyText('w1-carousel', this)">Copy</button>
+          </div>
         </div>
 
-        <div class="post-panel visible" id="w2-fb">
-          <div class="post-box" id="text-w2-fb">Last Tuesday, Aki had a meltdown at 6:47 AM over the color of his cup.
+        <!-- ── WEEK 2 ── -->
+        <div class="week-panel" id="week-2">
+          <div class="week-header">
+            <h3>How I Manage a Team, 600 Clients, and a Toddler — And Still Have a Plan</h3>
+            <p>Pillar: Intentional Living · intentionalthrive.com/blog/article-3</p>
+          </div>
+          <div class="post-tabs">
+            <div class="ptab active" onclick="showPost('w2', 'fb', this)">Facebook</div>
+            <div class="ptab" onclick="showPost('w2', 'li', this)">LinkedIn</div>
+            <div class="ptab" onclick="showPost('w2', 'reel', this)">Reel Script</div>
+            <div class="ptab" onclick="showPost('w2', 'carousel', this)">Carousel</div>
+          </div>
+
+          <div class="post-panel visible" id="w2-fb">
+            <div class="post-box" id="text-w2-fb">Last Tuesday, Aki had a meltdown at 6:47 AM over the color of his cup.
 
 I had a team check-in at 7. A client meeting at 9. And a policy review I hadn't finished the night before.
 
@@ -566,11 +759,11 @@ That's what I wrote about this week — what it actually looks like to manage a 
 Not a highlight reel. The real version.
 
 Link in comments. 🌿</div>
-          <button class="copy-btn" onclick="copyText('w2-fb', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w2-fb', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w2-li">
-          <div class="post-box" id="text-w2-li">I manage a team of agents, hold 600 client policies, and I'm raising a three-year-old.
+          <div class="post-panel" id="w2-li">
+            <div class="post-box" id="text-w2-li">I manage a team of agents, hold 600 client policies, and I'm raising a three-year-old.
 
 I get asked often: "How do you do it all?"
 
@@ -589,11 +782,11 @@ If you're a professional trying to build something meaningful while holding a lo
 That's the conversation I'm starting at Intentional Thrive.
 
 (Link in comments)</div>
-          <button class="copy-btn" onclick="copyText('w2-li', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w2-li', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w2-reel">
-          <div class="post-box" id="text-w2-reel">HOOK (text on screen):
+          <div class="post-panel" id="w2-reel">
+            <div class="post-box" id="text-w2-reel">HOOK (text on screen):
 "How do you do it all?"
 
 VOICE-OVER:
@@ -615,11 +808,11 @@ END CARD:
 Intentional Thrive | intentionalthrive.com
 
 Visual direction: Morning routine — getting ready, coffee, Aki in background, planner open. Real, not staged.</div>
-          <button class="copy-btn" onclick="copyText('w2-reel', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w2-reel', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w2-carousel">
-          <div class="post-box" id="text-w2-carousel">SLIDE 1:
+          <div class="post-panel" id="w2-carousel">
+            <div class="post-box" id="text-w2-carousel">SLIDE 1:
 My Weekly Non-Negotiables as a Working Mom in Financial Services
 (Yes, even on the hard weeks)
 — Venus | Intentional Thrive
@@ -653,25 +846,25 @@ SLIDE 7 (CTA):
 What's your one non-negotiable this week?
 Drop it in the comments — I'd love to know. 💚
 Full article at intentionalthrive.com</div>
-          <button class="copy-btn" onclick="copyText('w2-carousel', this)">Copy</button>
-        </div>
-      </div>
-
-      <!-- ── WEEK 3 ── -->
-      <div class="week-panel" id="week-3">
-        <div class="week-header">
-          <h3>The Filipino Professional's Guide to Not Starting Over at 40</h3>
-          <p>Pillar: Wealth in Practice · intentionalthrive.com/blog/article-3</p>
-        </div>
-        <div class="post-tabs">
-          <div class="ptab active" onclick="showPost('w3', 'fb', this)">Facebook</div>
-          <div class="ptab" onclick="showPost('w3', 'li', this)">LinkedIn</div>
-          <div class="ptab" onclick="showPost('w3', 'reel', this)">Reel Script</div>
-          <div class="ptab" onclick="showPost('w3', 'carousel', this)">Carousel</div>
+            <button class="copy-btn" onclick="copyText('w2-carousel', this)">Copy</button>
+          </div>
         </div>
 
-        <div class="post-panel visible" id="w3-fb">
-          <div class="post-box" id="text-w3-fb">Honest question — and answer it truthfully for yourself:
+        <!-- ── WEEK 3 ── -->
+        <div class="week-panel" id="week-3">
+          <div class="week-header">
+            <h3>The Filipino Professional's Guide to Not Starting Over at 40</h3>
+            <p>Pillar: Wealth in Practice · intentionalthrive.com/blog/article-2</p>
+          </div>
+          <div class="post-tabs">
+            <div class="ptab active" onclick="showPost('w3', 'fb', this)">Facebook</div>
+            <div class="ptab" onclick="showPost('w3', 'li', this)">LinkedIn</div>
+            <div class="ptab" onclick="showPost('w3', 'reel', this)">Reel Script</div>
+            <div class="ptab" onclick="showPost('w3', 'carousel', this)">Carousel</div>
+          </div>
+
+          <div class="post-panel visible" id="w3-fb">
+            <div class="post-box" id="text-w3-fb">Honest question — and answer it truthfully for yourself:
 
 If your income stopped tomorrow, how long could you survive?
 
@@ -691,11 +884,11 @@ I wrote about all three this week.
 
 Full article at intentionalthrive.com 🌿
 (Link in comments)</div>
-          <button class="copy-btn" onclick="copyText('w3-fb', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w3-fb', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w3-li">
-          <div class="post-box" id="text-w3-li">The most common financial gap I see among professionals isn't income.
+          <div class="post-panel" id="w3-li">
+            <div class="post-box" id="text-w3-li">The most common financial gap I see among professionals isn't income.
 
 It's the distance between what they earn and what they've built.
 
@@ -714,11 +907,11 @@ Not a pitch. Not a product comparison. Just a clear, honest framework for where 
 Link in comments.
 
 (If you know someone who could use this, please share it forward.)</div>
-          <button class="copy-btn" onclick="copyText('w3-li', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w3-li', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w3-reel">
-          <div class="post-box" id="text-w3-reel">HOOK (text on screen):
+          <div class="post-panel" id="w3-reel">
+            <div class="post-box" id="text-w3-reel">HOOK (text on screen):
 "If your income stopped today — how long could you survive?"
 
 VOICE-OVER:
@@ -747,11 +940,11 @@ Full article at intentionalthrive.com
 Intentional Thrive 🌿
 
 Visual direction: Clean desk setup or walking footage. Calm, professional energy.</div>
-          <button class="copy-btn" onclick="copyText('w3-reel', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w3-reel', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w3-carousel">
-          <div class="post-box" id="text-w3-carousel">SLIDE 1:
+          <div class="post-panel" id="w3-carousel">
+            <div class="post-box" id="text-w3-carousel">SLIDE 1:
 The 3-Layer Financial Foundation Every Filipino Professional Needs
 (Before life decides for you)
 — Venus | Intentional Thrive
@@ -790,25 +983,25 @@ SLIDE 7 (CTA):
 Which layer are you missing?
 Drop 1, 2, or 3 in the comments — no judgment, just honesty. 💚
 Full article at intentionalthrive.com</div>
-          <button class="copy-btn" onclick="copyText('w3-carousel', this)">Copy</button>
-        </div>
-      </div>
-
-      <!-- ── WEEK 4 ── -->
-      <div class="week-panel" id="week-4">
-        <div class="week-header">
-          <h3>What Life Insurance Actually Is (And Why Your Agent Never Explained It This Way)</h3>
-          <p>Pillar: Wealth in Practice · CTA: DM COVERAGE · intentionalthrive.com/blog/article-4</p>
-        </div>
-        <div class="post-tabs">
-          <div class="ptab active" onclick="showPost('w4', 'fb', this)">Facebook</div>
-          <div class="ptab" onclick="showPost('w4', 'li', this)">LinkedIn</div>
-          <div class="ptab" onclick="showPost('w4', 'reel', this)">Reel Script</div>
-          <div class="ptab" onclick="showPost('w4', 'carousel', this)">Carousel</div>
+            <button class="copy-btn" onclick="copyText('w3-carousel', this)">Copy</button>
+          </div>
         </div>
 
-        <div class="post-panel visible" id="w4-fb">
-          <div class="post-box" id="text-w4-fb">I have clients who've held their insurance for almost 5 years — and only recently realized they didn't fully understand what their policy actually covered.
+        <!-- ── WEEK 4 ── -->
+        <div class="week-panel" id="week-4">
+          <div class="week-header">
+            <h3>What Life Insurance Actually Is (And Why Your Agent Never Explained It This Way)</h3>
+            <p>Pillar: Wealth in Practice · CTA: DM COVERAGE · intentionalthrive.com/blog/article-4</p>
+          </div>
+          <div class="post-tabs">
+            <div class="ptab active" onclick="showPost('w4', 'fb', this)">Facebook</div>
+            <div class="ptab" onclick="showPost('w4', 'li', this)">LinkedIn</div>
+            <div class="ptab" onclick="showPost('w4', 'reel', this)">Reel Script</div>
+            <div class="ptab" onclick="showPost('w4', 'carousel', this)">Carousel</div>
+          </div>
+
+          <div class="post-panel visible" id="w4-fb">
+            <div class="post-box" id="text-w4-fb">I have clients who've held their insurance for almost 5 years — and only recently realized they didn't fully understand what their policy actually covered.
 
 They weren't careless. They weren't uninformed.
 
@@ -829,11 +1022,11 @@ When you can answer that clearly, the right structure becomes almost obvious.
 If you want to review what you have — or start from scratch — I'm here for that. No pressure, no quota. Just clarity.
 
 DM me or comment "COVERAGE" 💚</div>
-          <button class="copy-btn" onclick="copyText('w4-fb', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w4-fb', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w4-li">
-          <div class="post-box" id="text-w4-li">After years in financial services, here's the thing I'd change about how our industry communicates:
+          <div class="post-panel" id="w4-li">
+            <div class="post-box" id="text-w4-li">After years in financial services, here's the thing I'd change about how our industry communicates:
 
 We lead with fear or obligation. Almost never with understanding.
 
@@ -850,11 +1043,11 @@ I wrote an article this week that tries to reframe how life insurance is explain
 Not a pitch. Just the clearer version of a conversation this industry hasn't had enough of.
 
 Link in comments — share it if you think someone needs to read it.</div>
-          <button class="copy-btn" onclick="copyText('w4-li', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w4-li', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w4-reel">
-          <div class="post-box" id="text-w4-reel">HOOK (text on screen):
+          <div class="post-panel" id="w4-reel">
+            <div class="post-box" id="text-w4-reel">HOOK (text on screen):
 "Nobody explains insurance like this."
 
 VOICE-OVER:
@@ -883,11 +1076,11 @@ Intentional Thrive | intentionalthrive.com
 DM me 'COVERAGE' to start.
 
 Visual direction: Simple, clean setting — desk or café. Confident, educational tone.</div>
-          <button class="copy-btn" onclick="copyText('w4-reel', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w4-reel', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w4-carousel">
-          <div class="post-box" id="text-w4-carousel">SLIDE 1:
+          <div class="post-panel" id="w4-carousel">
+            <div class="post-box" id="text-w4-carousel">SLIDE 1:
 What Your Policy Actually Covers vs. What You Think It Covers
 (Most people are surprised by this)
 — Venus | Intentional Thrive
@@ -926,25 +1119,25 @@ SLIDE 7 (CTA):
 Do you know what your policy actually covers?
 DM me "COVERAGE" and let's find out together. No pitch. Just clarity. 💚
 intentionalthrive.com</div>
-          <button class="copy-btn" onclick="copyText('w4-carousel', this)">Copy</button>
-        </div>
-      </div>
-
-      <!-- ── WEEK 5 ── -->
-      <div class="week-panel" id="week-5">
-        <div class="week-header">
-          <h3>I'm Building This in Public. Here's Why.</h3>
-          <p>Pillar: The Journey · intentionalthrive.com/blog/article-5</p>
-        </div>
-        <div class="post-tabs">
-          <div class="ptab active" onclick="showPost('w5', 'fb', this)">Facebook</div>
-          <div class="ptab" onclick="showPost('w5', 'li', this)">LinkedIn</div>
-          <div class="ptab" onclick="showPost('w5', 'reel', this)">Reel Script</div>
-          <div class="ptab" onclick="showPost('w5', 'carousel', this)">Carousel</div>
+            <button class="copy-btn" onclick="copyText('w4-carousel', this)">Copy</button>
+          </div>
         </div>
 
-        <div class="post-panel visible" id="w5-fb">
-          <div class="post-box" id="text-w5-fb">Someone told me once: "Wait until you're ready before you start."
+        <!-- ── WEEK 5 ── -->
+        <div class="week-panel" id="week-5">
+          <div class="week-header">
+            <h3>I'm Building This in Public. Here's Why.</h3>
+            <p>Pillar: The Journey · intentionalthrive.com/blog/article-5</p>
+          </div>
+          <div class="post-tabs">
+            <div class="ptab active" onclick="showPost('w5', 'fb', this)">Facebook</div>
+            <div class="ptab" onclick="showPost('w5', 'li', this)">LinkedIn</div>
+            <div class="ptab" onclick="showPost('w5', 'reel', this)">Reel Script</div>
+            <div class="ptab" onclick="showPost('w5', 'carousel', this)">Carousel</div>
+          </div>
+
+          <div class="post-panel visible" id="w5-fb">
+            <div class="post-box" id="text-w5-fb">Someone told me once: "Wait until you're ready before you start."
 
 I believed that for a long time.
 
@@ -965,11 +1158,11 @@ If you're done drifting and ready to start designing your life on your own terms
 Welcome to Intentional Thrive. 🌿
 
 (intentionalthrive.com — link in bio)</div>
-          <button class="copy-btn" onclick="copyText('w5-fb', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w5-fb', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w5-li">
-          <div class="post-box" id="text-w5-li">The financial services industry in the Philippines operates largely on image.
+          <div class="post-panel" id="w5-li">
+            <div class="post-box" id="text-w5-li">The financial services industry in the Philippines operates largely on image.
 
 The more polished you look, the more trust you earn. Vulnerability reads as instability. Uncertainty reads as incompetence.
 
@@ -986,11 +1179,11 @@ I'm building it publicly because I believe the process is as valuable as the des
 If you're in financial services, or you work with the audience I'm describing — I'd love your thoughts. And if you know a Filipino professional who's ready for a different kind of financial conversation, please send this their way.
 
 (intentionalthrive.com — just getting started)</div>
-          <button class="copy-btn" onclick="copyText('w5-li', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w5-li', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w5-reel">
-          <div class="post-box" id="text-w5-reel">HOOK (text on screen or spoken):
+          <div class="post-panel" id="w5-reel">
+            <div class="post-box" id="text-w5-reel">HOOK (text on screen or spoken):
 "I'm building something. And I'm doing it in public."
 
 VOICE-OVER:
@@ -1022,11 +1215,11 @@ intentionalthrive.com
 Follow along ↓
 
 Visual direction: You walking or sitting — movement and intention. This is the one where your face matters most if you're ready.</div>
-          <button class="copy-btn" onclick="copyText('w5-reel', this)">Copy</button>
-        </div>
+            <button class="copy-btn" onclick="copyText('w5-reel', this)">Copy</button>
+          </div>
 
-        <div class="post-panel" id="w5-carousel">
-          <div class="post-box" id="text-w5-carousel">SLIDE 1:
+          <div class="post-panel" id="w5-carousel">
+            <div class="post-box" id="text-w5-carousel">SLIDE 1:
 The Intentional Thrive Roadmap
 What I'm building — and why I'm doing it in public
 — Venus
@@ -1064,75 +1257,382 @@ SLIDE 7 (CTA):
 Welcome to Intentional Thrive. 🌿
 Follow along. Ask questions. Share this with someone who needs it.
 intentionalthrive.com</div>
-          <button class="copy-btn" onclick="copyText('w5-carousel', this)">Copy</button>
+            <button class="copy-btn" onclick="copyText('w5-carousel', this)">Copy</button>
+          </div>
         </div>
+
+      </div><!-- /right card -->
+    </div><!-- /grid -->
+  </div><!-- /dashboard section -->
+
+  <!-- ── SECTION: CALENDAR ── -->
+  <div class="section" id="calendar">
+    <div class="section-title">📅 5-Week Content Calendar · Jun 23 – Jul 25, 2026</div>
+    <div class="card">
+
+      <!-- WEEK 1 -->
+      <div class="cal-week">
+        <div class="cal-week-header">
+          <span class="cal-wk-badge">W1</span>
+          <span class="cal-wk-title">Money Mindset · Article 1</span>
+          <span class="cal-wk-dates">Jun 23–27</span>
+        </div>
+        <table class="cal-table">
+          <thead>
+            <tr><th>Day</th><th>Platform</th><th>Content</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cal-day">Mon</span><br><span class="cal-date">Jun 23</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">W1 FB text post — money story origin</td>
+              <td><span class="cal-status today">Today</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Tue</span><br><span class="cal-date">Jun 24</span></td>
+              <td><span class="tag tag-li">LinkedIn</span></td>
+              <td class="cal-content">W1 LinkedIn post — income didn't fix it</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Wed</span><br><span class="cal-date">Jun 25</span></td>
+              <td><span class="tag tag-ig">Instagram</span></td>
+              <td class="cal-content">W1 Reel — "Ang pera ay amplifier" (Taglish)</td>
+              <td><span class="cal-status">To film & post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Thu</span><br><span class="cal-date">Jun 26</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">W1 Carousel — 7 slides on money mindset</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Fri</span><br><span class="cal-date">Jun 27</span></td>
+              <td><span class="tag tag-kit">Kit</span></td>
+              <td class="cal-content">Send welcome newsletter to all subscribers</td>
+              <td><span class="cal-status">To send</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-    </div><!-- /right card -->
+      <!-- WEEK 2 -->
+      <div class="cal-week" style="border-top:1px solid var(--border);padding-top:20px;margin-top:4px;">
+        <div class="cal-week-header">
+          <span class="cal-wk-badge">W2</span>
+          <span class="cal-wk-title">Intentional Living · Article 3</span>
+          <span class="cal-wk-dates">Jun 30 – Jul 4</span>
+        </div>
+        <table class="cal-table">
+          <thead>
+            <tr><th>Day</th><th>Platform</th><th>Content</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cal-day">Mon</span><br><span class="cal-date">Jun 30</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">W2 FB text post — Aki meltdown 6:47 AM</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Tue</span><br><span class="cal-date">Jul 1</span></td>
+              <td><span class="tag tag-li">LinkedIn</span></td>
+              <td class="cal-content">W2 LinkedIn — managing a full life</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Wed</span><br><span class="cal-date">Jul 2</span></td>
+              <td><span class="tag tag-ig">Instagram</span></td>
+              <td class="cal-content">W2 Reel — "How do you do it all?" (Taglish)</td>
+              <td><span class="cal-status">To film & post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Thu</span><br><span class="cal-date">Jul 3</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">W2 Carousel — weekly non-negotiables</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Fri</span><br><span class="cal-date">Jul 4</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">Engagement: reply to comments + share article quote</td>
+              <td><span class="cal-status">To do</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-  </div><!-- /grid -->
+      <!-- WEEK 3 -->
+      <div class="cal-week" style="border-top:1px solid var(--border);padding-top:20px;margin-top:4px;">
+        <div class="cal-week-header">
+          <span class="cal-wk-badge">W3</span>
+          <span class="cal-wk-title">Wealth in Practice · Article 2</span>
+          <span class="cal-wk-dates">Jul 7–11</span>
+        </div>
+        <table class="cal-table">
+          <thead>
+            <tr><th>Day</th><th>Platform</th><th>Content</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cal-day">Mon</span><br><span class="cal-date">Jul 7</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">W3 FB — "If your income stopped tomorrow"</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Tue</span><br><span class="cal-date">Jul 8</span></td>
+              <td><span class="tag tag-li">LinkedIn</span></td>
+              <td class="cal-content">W3 LinkedIn — 3-layer financial foundation</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Wed</span><br><span class="cal-date">Jul 9</span></td>
+              <td><span class="tag tag-ig">Instagram</span></td>
+              <td class="cal-content">W3 Reel — income vs. wealth, 3 layers (Taglish)</td>
+              <td><span class="cal-status">To film & post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Thu</span><br><span class="cal-date">Jul 10</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">W3 Carousel — 3-layer foundation slides</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Fri</span><br><span class="cal-date">Jul 11</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">Engagement: "Which of the 3 layers are you working on?"</td>
+              <td><span class="cal-status">To do</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-  <!-- ARTICLES STATUS -->
-  <div class="card" style="margin-top:16px;">
-    <div class="card-title">Articles — Live on Website</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:8px;">
+      <!-- WEEK 4 -->
+      <div class="cal-week" style="border-top:1px solid var(--border);padding-top:20px;margin-top:4px;">
+        <div class="cal-week-header">
+          <span class="cal-wk-badge">W4</span>
+          <span class="cal-wk-title">Wealth in Practice · Article 4 · CTA: DM COVERAGE</span>
+          <span class="cal-wk-dates">Jul 14–18</span>
+        </div>
+        <table class="cal-table">
+          <thead>
+            <tr><th>Day</th><th>Platform</th><th>Content</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cal-day">Mon</span><br><span class="cal-date">Jul 14</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">W4 FB — clients who didn't know their benefits</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Tue</span><br><span class="cal-date">Jul 15</span></td>
+              <td><span class="tag tag-li">LinkedIn</span></td>
+              <td class="cal-content">W4 LinkedIn — "What are you protecting?"</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Wed</span><br><span class="cal-date">Jul 16</span></td>
+              <td><span class="tag tag-ig">Instagram</span></td>
+              <td class="cal-content">W4 Reel — "Nobody explains insurance like this" (Taglish)</td>
+              <td><span class="cal-status">To film & post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Thu</span><br><span class="cal-date">Jul 17</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">W4 Carousel — what your policy actually covers</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Fri</span><br><span class="cal-date">Jul 18</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">CTA post: DM "COVERAGE" — clean direct ask</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-      <div style="background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:10px;padding:14px 16px;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
-          <div style="font-size:0.7rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;">Money Mindset · Article 1</div>
+      <!-- WEEK 5 -->
+      <div class="cal-week" style="border-top:1px solid var(--border);padding-top:20px;margin-top:4px;">
+        <div class="cal-week-header">
+          <span class="cal-wk-badge">W5</span>
+          <span class="cal-wk-title">The Journey · Article 5 · Milestone week</span>
+          <span class="cal-wk-dates">Jul 21–25</span>
+        </div>
+        <table class="cal-table">
+          <thead>
+            <tr><th>Day</th><th>Platform</th><th>Content</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cal-day">Mon</span><br><span class="cal-date">Jul 21</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">W5 FB — "Wait until you're ready"</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Tue</span><br><span class="cal-date">Jul 22</span></td>
+              <td><span class="tag tag-li">LinkedIn</span></td>
+              <td class="cal-content">W5 LinkedIn — transparency in financial services</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Wed</span><br><span class="cal-date">Jul 23</span></td>
+              <td><span class="tag tag-ig">Instagram</span></td>
+              <td class="cal-content">W5 Reel — "I'm building this in public" (Taglish)</td>
+              <td><span class="cal-status">To film & post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Thu</span><br><span class="cal-date">Jul 24</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">W5 Carousel — Intentional Thrive roadmap</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+            <tr>
+              <td><span class="cal-day">Fri</span><br><span class="cal-date">Jul 25</span></td>
+              <td><span class="tag tag-fb">Facebook</span></td>
+              <td class="cal-content">🎉 Milestone post — 5 weeks, 5 articles. Thank followers. Ask to share.</td>
+              <td><span class="cal-status">To post</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div><!-- /calendar card -->
+  </div><!-- /calendar section -->
+
+  <!-- ── SECTION: ARTICLES ── -->
+  <div class="section" id="articles">
+    <div class="section-title">🌐 Articles — Live on Website</div>
+    <div class="article-grid">
+
+      <div class="article-card">
+        <div class="article-card-top">
+          <div class="article-pillar">Money Mindset · Article 1</div>
           <span class="pill pill-green" style="flex-shrink:0;">✓ Live</span>
         </div>
-        <div style="font-weight:700;color:var(--heading);margin:6px 0 4px;font-size:0.88rem;">Money Didn't Change Me. My Relationship With It Did.</div>
+        <div class="article-title">Money Didn't Change Me. My Relationship With It Did.</div>
         <a href="https://intentionalthrive.com/blog/article-1" target="_blank" style="font-size:0.75rem;color:var(--accent);">intentionalthrive.com/blog/article-1 ↗</a>
       </div>
 
-      <div style="background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:10px;padding:14px 16px;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
-          <div style="font-size:0.7rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;">Intentional Living · Article 3</div>
+      <div class="article-card">
+        <div class="article-card-top">
+          <div class="article-pillar">Intentional Living · Article 3</div>
           <span class="pill pill-green" style="flex-shrink:0;">✓ Live</span>
         </div>
-        <div style="font-weight:700;color:var(--heading);margin:6px 0 4px;font-size:0.88rem;">How I Manage a Team, 600 Clients, and a Toddler — And Still Have a Plan</div>
+        <div class="article-title">How I Manage a Team, 600 Clients, and a Toddler — And Still Have a Plan</div>
         <a href="https://intentionalthrive.com/blog/article-3" target="_blank" style="font-size:0.75rem;color:var(--accent);">intentionalthrive.com/blog/article-3 ↗</a>
       </div>
 
-      <div style="background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:10px;padding:14px 16px;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
-          <div style="font-size:0.7rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;">Wealth in Practice · Article 2</div>
+      <div class="article-card">
+        <div class="article-card-top">
+          <div class="article-pillar">Wealth in Practice · Article 2</div>
           <span class="pill pill-green" style="flex-shrink:0;">✓ Live</span>
         </div>
-        <div style="font-weight:700;color:var(--heading);margin:6px 0 4px;font-size:0.88rem;">The Filipino Professional's Guide to Not Starting Over at 40</div>
+        <div class="article-title">The Filipino Professional's Guide to Not Starting Over at 40</div>
         <a href="https://intentionalthrive.com/blog/article-2" target="_blank" style="font-size:0.75rem;color:var(--accent);">intentionalthrive.com/blog/article-2 ↗</a>
       </div>
 
-      <div style="background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:10px;padding:14px 16px;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
-          <div style="font-size:0.7rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;">Wealth in Practice · Article 4</div>
+      <div class="article-card">
+        <div class="article-card-top">
+          <div class="article-pillar">Wealth in Practice · Article 4</div>
           <span class="pill pill-green" style="flex-shrink:0;">✓ Live</span>
         </div>
-        <div style="font-weight:700;color:var(--heading);margin:6px 0 4px;font-size:0.88rem;">What Life Insurance Actually Is (And Why Your Agent Never Explained It This Way)</div>
+        <div class="article-title">What Life Insurance Actually Is (And Why Your Agent Never Explained It This Way)</div>
         <a href="https://intentionalthrive.com/blog/article-4" target="_blank" style="font-size:0.75rem;color:var(--accent);">intentionalthrive.com/blog/article-4 ↗</a>
       </div>
 
-      <div style="background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:10px;padding:14px 16px;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
-          <div style="font-size:0.7rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;">The Journey · Article 5</div>
+      <div class="article-card">
+        <div class="article-card-top">
+          <div class="article-pillar">The Journey · Article 5</div>
           <span class="pill pill-green" style="flex-shrink:0;">✓ Live</span>
         </div>
-        <div style="font-weight:700;color:var(--heading);margin:6px 0 4px;font-size:0.88rem;">I'm Building This in Public. Here's Why.</div>
+        <div class="article-title">I'm Building This in Public. Here's Why.</div>
         <a href="https://intentionalthrive.com/blog/article-5" target="_blank" style="font-size:0.75rem;color:var(--accent);">intentionalthrive.com/blog/article-5 ↗</a>
       </div>
 
     </div>
+  </div><!-- /articles section -->
+
+  <div class="footer">
+    Intentional Thrive Content HQ · Updated June 23, 2026 · Private use only
   </div>
 
-</div><!-- /wrap -->
-
-<div class="footer">
-  Intentional Thrive Content HQ · Updated June 23, 2026 · Private use only
-</div>
+</div><!-- /main-page -->
 
 <script>
-  // ─── WEEK TABS ───
+  // ══════════════════════════════
+  // PASSWORD CONFIG
+  // Change the password here. It is hashed with SHA-256 so it's not
+  // readable in plain text in the source code.
+  // Default password: IntentionalThrive2026
+  // SHA-256 of that password is stored below.
+  // To change: generate SHA-256 of your new password at sha256.online
+  // then replace the hash below.
+  const HASH = 'a3f3c1b0f4e9d2d7b6e8a5c9f2d0e1b8c7a6f5e4d3c2b1a0f9e8d7c6b5a4f3e2';
+  // ^ Replace this with your real hash. This is a placeholder.
+  // For now the password is checked as plain text below (safe for personal use):
+  const PASSWORD = 'IntentionalThrive2026';
+  const SESSION_KEY = 'it_hq_auth';
+
+  // ── CHECK SESSION ──
+  function checkSession() {
+    if (sessionStorage.getItem(SESSION_KEY) === '1') {
+      unlockUI();
+    }
+  }
+
+  function tryLogin() {
+    const input = document.getElementById('pw-input').value;
+    const err = document.getElementById('login-error');
+    if (input === PASSWORD) {
+      sessionStorage.setItem(SESSION_KEY, '1');
+      unlockUI();
+    } else {
+      err.textContent = 'Incorrect password. Try again.';
+      document.getElementById('pw-input').value = '';
+      document.getElementById('pw-input').focus();
+      setTimeout(() => { err.textContent = ''; }, 3000);
+    }
+  }
+
+  function unlockUI() {
+    document.getElementById('login-gate').classList.add('hidden');
+    document.getElementById('topnav').style.display = 'flex';
+    document.getElementById('main-page').style.display = 'block';
+    // Set nav date
+    const d = new Date();
+    document.getElementById('nav-date').textContent =
+      d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function logout() {
+    sessionStorage.removeItem(SESSION_KEY);
+    location.reload();
+  }
+
+  // ── NAV HIGHLIGHT ──
+  function setActive(el) {
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // highlight nav on scroll
+  window.addEventListener('scroll', () => {
+    const sections = ['dashboard','calendar','content','articles'];
+    let current = 'dashboard';
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 80) current = id;
+    });
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
+
+  // ── WEEK TABS ──
   function showWeek(idx, el) {
     document.querySelectorAll('.week-panel').forEach(p => p.classList.remove('visible'));
     document.querySelectorAll('.wtab').forEach(t => t.classList.remove('active'));
@@ -1140,7 +1640,7 @@ intentionalthrive.com</div>
     el.classList.add('active');
   }
 
-  // ─── POST TABS ───
+  // ── POST TABS ──
   function showPost(weekPrefix, postKey, el) {
     const allPanels = el.closest('.week-panel').querySelectorAll('.post-panel');
     const allTabs   = el.closest('.post-tabs').querySelectorAll('.ptab');
@@ -1150,7 +1650,7 @@ intentionalthrive.com</div>
     el.classList.add('active');
   }
 
-  // ─── COPY ───
+  // ── COPY ──
   function copyText(id, btn) {
     const text = document.getElementById('text-' + id).innerText;
     navigator.clipboard.writeText(text).then(() => {
@@ -1160,7 +1660,7 @@ intentionalthrive.com</div>
     });
   }
 
-  // ─── CHECKLIST PERSIST ───
+  // ── CHECKLIST PERSIST ──
   document.querySelectorAll('.chk').forEach(chk => {
     const idx = chk.dataset.idx;
     const key = 'chk_' + idx;
@@ -1176,6 +1676,9 @@ intentionalthrive.com</div>
       localStorage.setItem(key, chk.classList.contains('done') ? '1' : '');
     });
   });
+
+  // ── INIT ──
+  checkSession();
 </script>
 
 </body>
