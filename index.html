@@ -1144,7 +1144,7 @@ function quickAdd(stage){
 const OLLAMA_PROXY_LOCAL = 'http://localhost:8080/proxy';
 const OLLAMA_NGROK_DEFAULT = 'https://educator-kerchief-showplace.ngrok-free.dev';
 let OLLAMA_PROXY = localStorage.getItem('ollama_url') || OLLAMA_NGROK_DEFAULT;
-const OLLAMA_MODEL = 'gemma3'; // fallback to qwen3.5 if not found
+const OLLAMA_MODEL = 'gemma4'; // fallback to qwen3.5 if not found
 let ollamaOnline = false;
 
 async function checkOllama(){
@@ -1156,7 +1156,7 @@ async function checkOllama(){
       const badge = document.getElementById('ollama-status');
       badge.className = 'ollama-badge ollama-ok';
       const models = (data.models||[]).map(m=>m.name);
-      const preferred = ['gemma3','gemma3:latest','gemma:latest','qwen3.5','qwen3.5:latest','llama3','llama3.1','mistral'];
+      const preferred = ['gemma4','gemma4:latest','qwen3.5','qwen3.5:latest','gemma3','llama3','mistral'];
       window._ollamaModel = preferred.find(p=>models.some(m=>m.startsWith(p.split(':')[0]))) || models[0] || OLLAMA_MODEL;
       badge.innerHTML = '<span class="dot"></span> Ollama online · '+window._ollamaModel;
     } else { ollamaOnline = false; setOfflineBadge(); }
