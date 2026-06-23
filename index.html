@@ -1149,7 +1149,7 @@ let ollamaOnline = false;
 
 async function checkOllama(){
   try {
-    const r = await fetch(OLLAMA_PROXY+'/api/tags', { signal: AbortSignal.timeout(3000) });
+    const r = await fetch(OLLAMA_PROXY+'/api/tags', { signal: AbortSignal.timeout(5000), headers: {'ngrok-skip-browser-warning':'1'} });
     if(r.ok){
       const data = await r.json();
       ollamaOnline = true;
@@ -1250,7 +1250,7 @@ async function generateCopy(id){
   try {
     const resp = await fetch(OLLAMA_PROXY+'/api/generate', {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','ngrok-skip-browser-warning':'1'},
       body: JSON.stringify({
         model: window._ollamaModel || OLLAMA_MODEL,
         prompt: buildPrompt(idea),
