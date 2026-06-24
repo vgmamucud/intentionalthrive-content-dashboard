@@ -231,6 +231,12 @@
       .sidebar { display:none; }
       .content-area { margin-left:0;padding:16px 14px 60px; }
     }
+
+    /* ── LEGACY ARCHIVE ── */
+    .legacy-section { margin-top:16px;padding-top:4px;border-top:1px solid var(--border); }
+    .legacy-toggle { cursor:pointer;user-select:none;display:flex;align-items:center;gap:7px;padding:8px 8px 4px;font-size:.6rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .15s; }
+    .legacy-toggle:hover { color:var(--accent); }
+    #legacy-arrow { font-size:.55rem;display:inline-block;transition:transform .18s; }
   </style>
 </head>
 <body>
@@ -261,31 +267,37 @@
   <div class="layout">
     <!-- SIDEBAR -->
     <div class="sidebar">
-      <div class="sidebar-section">
-        <div class="sidebar-label">Overview</div>
-        <div class="nav-item active" onclick="showTab('mission',this)"><span class="icon">&#127919;</span> Mission Control</div>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-label">Content</div>
-        <div class="nav-item" onclick="showTab('pipeline',this)"><span class="icon">&#128204;</span> Pipeline</div>
-        <div class="nav-item" onclick="showTab('library',this)"><span class="icon">&#128218;</span> Content Library</div>
-        <div class="nav-item" onclick="showTab('ideas',this)"><span class="icon">&#128161;</span> Ideas Bank</div>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-label">Analytics</div>
-        <div class="nav-item" onclick="showTab('performance',this)"><span class="icon">&#128202;</span> Performance Log</div>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-label">Brand</div>
-        <div class="nav-item" onclick="showTab('articles',this)"><span class="icon">&#127760;</span> Live Articles</div>
+      <!-- NEW NAV SECTIONS WILL GO HERE -->
+
+      <div class="sidebar-section legacy-section">
+        <div class="legacy-toggle" onclick="toggleLegacy()">
+          <span id="legacy-arrow">▶</span> Archive
+        </div>
+        <div id="legacy-nav" style="display:none;">
+          <div class="nav-item" onclick="showLegacyTab('mission',this)"><span class="icon">&#127919;</span> Mission Control</div>
+          <div class="nav-item" onclick="showLegacyTab('pipeline',this)"><span class="icon">&#128204;</span> Pipeline</div>
+          <div class="nav-item" onclick="showLegacyTab('library',this)"><span class="icon">&#128218;</span> Content Library</div>
+          <div class="nav-item" onclick="showLegacyTab('ideas',this)"><span class="icon">&#128161;</span> Ideas Bank</div>
+          <div class="nav-item" onclick="showLegacyTab('performance',this)"><span class="icon">&#128202;</span> Performance Log</div>
+          <div class="nav-item" onclick="showLegacyTab('articles',this)"><span class="icon">&#127760;</span> Live Articles</div>
+        </div>
       </div>
     </div>
 
     <!-- CONTENT AREA -->
     <div class="content-area">
 
+      <!-- HOME -->
+      <div class="tab-panel active" id="tab-home">
+        <div class="page-title">Content OS</div>
+        <div class="page-sub">New dashboard in progress. Access previous pages under <strong>Archive</strong> in the sidebar.</div>
+      </div>
+
+      <!-- LEGACY ARCHIVE -->
+      <div id="legacy-panels" style="display:none;">
+
       <!-- MISSION CONTROL -->
-      <div class="tab-panel active" id="tab-mission">
+      <div class="tab-panel" id="tab-mission">
         <div class="page-title">Mission Control</div>
         <div class="page-sub" id="mission-date-sub">Loading...</div>
 
@@ -1011,6 +1023,8 @@ SLIDE 7 (CTA): Welcome to Intentional Thrive. Follow along. Ask questions. Share
         </div>
       </div>
 
+      </div><!-- /legacy-panels -->
+
     </div>
   </div>
 </div>
@@ -1044,6 +1058,29 @@ function logout(){ sessionStorage.removeItem(S_KEY); location.reload(); }
 // TABS
 function showTab(id, el){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+// LEGACY ARCHIVE
+function toggleLegacy(){
+  const nav = document.getElementById('legacy-nav');
+  const arrow = document.getElementById('legacy-arrow');
+  const isOpen = nav.style.display !== 'none';
+  nav.style.display = isOpen ? 'none' : 'block';
+  arrow.textContent = isOpen ? '▶' : '▼';
+  if(isOpen){
+    document.getElementById('legacy-panels').style.display = 'none';
+    document.querySelectorAll('#legacy-panels .tab-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    document.getElementById('tab-home').classList.add('active');
+  }
+}
+function showLegacyTab(id, el){
+  document.getElementById('tab-home').classList.remove('active');
+  document.getElementById('legacy-panels').style.display = 'block';
+  document.querySelectorAll('#legacy-panels .tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   el.classList.add('active');
