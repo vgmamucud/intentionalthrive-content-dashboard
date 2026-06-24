@@ -1573,13 +1573,14 @@ function saveQueue(){ localStorage.setItem('content_queue', JSON.stringify(conte
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 const PLATFORM_CONFIG = {
-  'website-article':             { label:'Website Article',  copyOnly:false },
-  'facebook-intentional-thrive': { label:'IT Facebook',      copyOnly:false },
-  'facebook-life-ready':         { label:'Life Ready FB',    copyOnly:false },
-  'facebook-personal':           { label:'Personal FB',      copyOnly:true  },
-  'linkedin':                    { label:'LinkedIn',         copyOnly:false },
-  'sender-broadcast':            { label:'Sender Broadcast', copyOnly:false },
-  'sender-sequence':             { label:'Sender Sequence',  copyOnly:false },
+  'website-article':             { label:'Website Article',  copyOnly:false, wired:false },
+  'facebook-intentional-thrive': { label:'IT Facebook',      copyOnly:false, wired:true  },
+  'facebook-life-ready':         { label:'Life Ready FB',    copyOnly:false, wired:true  },
+  'facebook-personal':           { label:'Personal FB',      copyOnly:true,  wired:false },
+  'instagram':                   { label:'Instagram',        copyOnly:false, wired:true  },
+  'linkedin':                    { label:'LinkedIn',         copyOnly:false, wired:false },
+  'sender-broadcast':            { label:'Sender Broadcast', copyOnly:false, wired:false },
+  'sender-sequence':             { label:'Sender Sequence',  copyOnly:false, wired:false },
 };
 
 // ── PARSER ──
@@ -1616,6 +1617,13 @@ function parseSection(name, body){
     });
     while(start < lines.length && !lines[start].trim()) start++;
     return { title, description, slug, pillar, readTime, pubDate, draft, content:lines.slice(start).join('\n').trim(), approved:false };
+  }
+  if(name === 'instagram'){
+    const lines = body.split('\n');
+    let imageUrl='', start=0;
+    lines.forEach((l,i)=>{ if(l.startsWith('image_url:')){ imageUrl=l.slice(10).trim(); start=Math.max(start,i+1); } });
+    while(start < lines.length && !lines[start].trim()) start++;
+    return { imageUrl, content:lines.slice(start).join('\n').trim(), approved:false };
   }
   if(name === 'sender-broadcast'){
     const lines = body.split('\n');
@@ -1714,6 +1722,10 @@ function renderPlatformPanelHtml(batch, bi, platform, isActive){
 <div style="display:flex;align-items:flex-end;padding-bottom:8px;gap:6px;font-size:.78rem;color:var(--muted);font-weight:700;"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" ${sec.draft?'checked':''} onchange="updateField(${bi},'${platform}','draft',this.checked)"> Draft</label></div>
 </div>
 <div class="copy-label">Article Body (Markdown)</div>`;
+  } else if(platform==='instagram'){
+    extra=`<div class="copy-label">Image URL <span style="font-weight:400;font-style:italic;text-transform:none;letter-spacing:0;">(required to post via API — must be public)</span></div>
+<input class="email-field" value="${escHtml(sec.imageUrl||'')}" placeholder="https://your-image.com/photo.jpg" oninput="updateField(${bi},'${platform}','imageUrl',this.value)" />
+<div class="copy-label">Caption</div>`;
   } else if(platform==='sender-broadcast'){
     extra=`<div class="copy-label">Subject Line</div>
 <input class="email-field" value="${escHtml(sec.subject||'')}" placeholder="Subject..." oninput="updateField(${bi},'${platform}','subject',this.value)" />
@@ -1729,7 +1741,9 @@ function renderPlatformPanelHtml(batch, bi, platform, isActive){
   }
   const postBtn = cfg.copyOnly
     ? `<button class="post-btn personal" onclick="copyQueueText(${bi},'${platform}',this)">Copy to clipboard</button><span class="copy-only-badge">Copy only</span>`
-    : `<button class="post-btn" title="Platform connection coming soon">Post to ${escHtml(cfg.label)}</button>`;
+    : cfg.wired
+      ? `<button class="post-btn ready" id="postbtn-${bi}-${platform}" onclick="postContent(${bi},'${platform}',this)">Post to ${escHtml(cfg.label)}</button>`
+      : `<button class="post-btn" title="Coming soon">Post to ${escHtml(cfg.label)}</button>`;
   return `<div class="platform-panel ${isActive?'active':''}" id="panel-${bi}-${platform}">
 ${extra}
 <textarea class="copy-textarea" oninput="updateField(${bi},'${platform}','content',this.value)">${escHtml(sec.content||'')}</textarea>
@@ -1774,6 +1788,44 @@ function copyQueueText(bi, platform, btn){
 function deleteBatch(bi){
   if(!confirm('Remove this batch from the queue?')) return;
   contentQueue.splice(bi,1); saveQueue(); renderQueue();
+}
+
+async function postContent(bi, platform, btn){
+  const sec = contentQueue[bi].sections[platform];
+  const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Posting...';
+
+  try {
+    let endpoint, body;
+    if(platform === 'facebook-intentional-thrive'){
+      endpoint = '/api/post-facebook';
+      body = { message: sec.content, pageTarget: 'intentional-thrive' };
+    } else if(platform === 'facebook-life-ready'){
+      endpoint = '/api/post-facebook';
+      body = { message: sec.content, pageTarget: 'life-ready' };
+    } else if(platform === 'instagram'){
+      if(!sec.imageUrl?.trim()){ alert('Add an image URL to the Instagram section before posting.'); btn.textContent=orig; btn.disabled=false; return; }
+      endpoint = '/api/post-instagram';
+      body = { caption: sec.content, imageUrl: sec.imageUrl };
+    }
+
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if(!res.ok || data.error) throw new Error(data.error || 'Post failed');
+
+    btn.textContent = '✓ Posted';
+    btn.classList.remove('ready');
+    btn.style.cssText = 'background:#d4edda;color:#1a6630;border-color:#a8d5b5;cursor:default;';
+    sec.posted = true; sec.postedAt = new Date().toISOString(); saveQueue();
+
+  } catch(e){
+    alert('Failed: ' + e.message);
+    btn.textContent = orig; btn.disabled = false;
+  }
 }
 
 checkSession();
