@@ -232,6 +232,59 @@
       .content-area { margin-left:0;padding:16px 14px 60px; }
     }
 
+    /* ── CONTENT QUEUE ── */
+    .drop-zone { border:2px dashed var(--border);border-radius:14px;padding:44px 20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface); }
+    .drop-zone:hover,.drop-zone.drag-over { border-color:var(--accent);background:var(--accent-light); }
+    .drop-zone-icon { font-size:2rem;margin-bottom:10px; }
+    .drop-zone-text { font-size:.86rem;color:var(--muted);font-weight:700; }
+    .drop-zone-sub { font-size:.72rem;color:var(--muted);margin-top:4px; }
+    #file-input { display:none; }
+
+    .queue-batch { background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;overflow:hidden; }
+    .batch-header { padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .15s;user-select:none; }
+    .batch-header:hover { background:var(--accent-light); }
+    .batch-week { font-size:.6rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--accent); }
+    .batch-meta { font-size:.7rem;color:var(--muted);margin-top:3px; }
+    .batch-progress { display:flex;gap:4px;margin-left:auto; }
+    .batch-dot { width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0; }
+    .batch-dot.approved { background:var(--accent); }
+    .batch-expand { font-size:.6rem;color:var(--muted);flex-shrink:0; }
+    .batch-body { display:none;border-top:1px solid var(--border); }
+    .batch-body.open { display:block; }
+
+    .platform-tabs { display:flex;gap:0;border-bottom:1px solid var(--border);overflow-x:auto; }
+    .ptab2 { padding:10px 16px;font-size:.72rem;font-weight:700;cursor:pointer;color:var(--muted);border:none;border-bottom:2.5px solid transparent;white-space:nowrap;background:none;transition:all .15s; }
+    .ptab2:hover { color:var(--accent); }
+    .ptab2.active { color:var(--accent);border-bottom-color:var(--accent); }
+    .ptab2.approved-tab { color:#1a6630; }
+    .ptab2.approved-tab.active { border-bottom-color:#1a6630; }
+    .platform-panel { display:none;padding:18px 20px; }
+    .platform-panel.active { display:block; }
+
+    .copy-label { font-size:.6rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px; }
+    .copy-textarea { width:100%;min-height:160px;padding:12px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:.82rem;line-height:1.72;color:var(--heading);background:var(--bg);outline:none;resize:vertical;font-family:-apple-system,'Inter',sans-serif;transition:border .15s; }
+    .copy-textarea:focus { border-color:var(--accent); }
+    .email-field { width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:.82rem;color:var(--heading);background:var(--bg);outline:none;margin-bottom:8px;transition:border .15s; }
+    .email-field:focus { border-color:var(--accent); }
+
+    .platform-actions { display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap; }
+    .approve-toggle { display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.78rem;font-weight:700;color:var(--muted);user-select:none;transition:color .15s; }
+    .approve-box { width:18px;height:18px;border-radius:5px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:10px;font-weight:900;color:#fff; }
+    .approve-toggle.checked { color:var(--accent); }
+    .approve-toggle.checked .approve-box { background:var(--accent);border-color:var(--accent); }
+    .approve-toggle.checked .approve-box::after { content:'✓'; }
+    .post-btn { background:var(--bg);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:.78rem;font-weight:700;cursor:not-allowed;transition:all .15s; }
+    .post-btn.ready { background:var(--accent);color:#fff;border-color:var(--accent);cursor:pointer; }
+    .post-btn.ready:hover { background:#3a6347; }
+    .post-btn.personal { background:#f3f0fc;color:#5f3dc4;border-color:#d9d3f5;cursor:pointer; }
+    .post-btn.personal:hover { background:#e8e3f8; }
+    .copy-only-badge { font-size:.65rem;font-weight:700;padding:3px 9px;border-radius:20px;background:#f3f0fc;color:#5f3dc4; }
+
+    .queue-empty { text-align:center;padding:60px 20px;color:var(--muted); }
+    .queue-empty-icon { font-size:2.5rem;margin-bottom:12px; }
+    .queue-empty-text { font-size:.88rem;font-weight:700;margin-bottom:4px;color:var(--heading); }
+    .queue-empty-sub { font-size:.74rem; }
+
     /* ── LEGACY ARCHIVE ── */
     .legacy-section { margin-top:16px;padding-top:4px;border-top:1px solid var(--border); }
     .legacy-toggle { cursor:pointer;user-select:none;display:flex;align-items:center;gap:7px;padding:8px 8px 4px;font-size:.6rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .15s; }
@@ -267,7 +320,10 @@
   <div class="layout">
     <!-- SIDEBAR -->
     <div class="sidebar">
-      <!-- NEW NAV SECTIONS WILL GO HERE -->
+      <div class="sidebar-section">
+        <div class="sidebar-label">Publish</div>
+        <div class="nav-item" onclick="showNewTab('queue',this)"><span class="icon">&#128240;</span> Content Queue</div>
+      </div>
 
       <div class="sidebar-section legacy-section">
         <div class="legacy-toggle" onclick="toggleLegacy()">
@@ -291,6 +347,25 @@
       <div class="tab-panel active" id="tab-home">
         <div class="page-title">Content OS</div>
         <div class="page-sub">New dashboard in progress. Access previous pages under <strong>Archive</strong> in the sidebar.</div>
+      </div>
+
+      <!-- CONTENT QUEUE -->
+      <div class="tab-panel" id="tab-queue">
+        <div class="page-title">Content Queue</div>
+        <div class="page-sub">Upload a Claude-generated .md file to review and post to your platforms.</div>
+
+        <div class="drop-zone" id="drop-zone"
+          onclick="document.getElementById('file-input').click()"
+          ondragover="queueDragOver(event)"
+          ondragleave="queueDragLeave()"
+          ondrop="queueDrop(event)">
+          <input type="file" id="file-input" accept=".md" onchange="handleFileSelect(event)" />
+          <div class="drop-zone-icon">&#128196;</div>
+          <div class="drop-zone-text">Drop your .md file here or click to browse</div>
+          <div class="drop-zone-sub">Claude-generated markdown &middot; one file per week / batch</div>
+        </div>
+
+        <div style="margin-top:20px;" id="queue-list"></div>
       </div>
 
       <!-- LEGACY ARCHIVE -->
@@ -1085,6 +1160,13 @@ function showLegacyTab(id, el){
   document.getElementById('tab-'+id).classList.add('active');
   el.classList.add('active');
 }
+function showNewTab(id, el){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('legacy-panels').style.display = 'none';
+  document.getElementById('tab-'+id).classList.add('active');
+  el.classList.add('active');
+}
 
 // LIBRARY
 function showWeek(idx, el){
@@ -1479,8 +1561,187 @@ function initAll(){
   renderCards();
   renderIdeas();
   renderPerf();
+  renderQueue();
   checkOllama();
-  setInterval(checkOllama, 10000); // re-check every 10s
+  setInterval(checkOllama, 10000);
+}
+
+// ── CONTENT QUEUE ──
+let contentQueue = JSON.parse(localStorage.getItem('content_queue') || '[]');
+function saveQueue(){ localStorage.setItem('content_queue', JSON.stringify(contentQueue)); }
+
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+const PLATFORM_CONFIG = {
+  'facebook-intentional-thrive': { label:'IT Facebook',      copyOnly:false },
+  'facebook-life-ready':         { label:'Life Ready FB',    copyOnly:false },
+  'facebook-personal':           { label:'Personal FB',      copyOnly:true  },
+  'linkedin':                    { label:'LinkedIn',         copyOnly:false },
+  'sender-broadcast':            { label:'Sender Broadcast', copyOnly:false },
+  'sender-sequence':             { label:'Sender Sequence',  copyOnly:false },
+};
+
+// ── PARSER ──
+function parseMd(text){
+  const fm = text.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if(!fm) return null;
+  const meta = {};
+  fm[1].split('\n').forEach(line => {
+    const m = line.match(/^([\w_]+):\s*(.+)$/);
+    if(m) meta[m[1]] = m[2].trim();
+  });
+  const sections = {};
+  fm[2].split(/^## /m).forEach(part => {
+    if(!part.trim()) return;
+    const nl = part.indexOf('\n');
+    if(nl < 0) return;
+    sections[part.substring(0,nl).trim()] = parseSection(part.substring(0,nl).trim(), part.substring(nl+1).trim());
+  });
+  return { id:Date.now().toString(), meta, sections, uploadedAt:new Date().toISOString() };
+}
+function parseSection(name, body){
+  if(name === 'sender-broadcast'){
+    const lines = body.split('\n');
+    let subject='', preview='', start=0;
+    lines.forEach((l,i) => {
+      if(l.startsWith('subject:')){ subject=l.slice(8).trim(); start=Math.max(start,i+1); }
+      else if(l.startsWith('preview:')){ preview=l.slice(8).trim(); start=Math.max(start,i+1); }
+    });
+    while(start < lines.length && !lines[start].trim()) start++;
+    return { subject, preview, content:lines.slice(start).join('\n').trim(), approved:false };
+  }
+  if(name === 'sender-sequence'){
+    const lines = body.split('\n');
+    let sequence_name='', step=1, delay_days=0, start=0;
+    lines.forEach((l,i) => {
+      if(l.startsWith('sequence_name:')){ sequence_name=l.slice(14).trim(); start=Math.max(start,i+1); }
+      else if(l.startsWith('step:')){ step=parseInt(l.slice(5))||1; start=Math.max(start,i+1); }
+      else if(l.startsWith('delay_days:')){ delay_days=parseInt(l.slice(11))||0; start=Math.max(start,i+1); }
+    });
+    while(start < lines.length && !lines[start].trim()) start++;
+    return { sequence_name, step, delay_days, content:lines.slice(start).join('\n').trim(), approved:false };
+  }
+  return { content:body, approved:false };
+}
+
+// ── FILE HANDLING ──
+function queueDragOver(e){ e.preventDefault(); document.getElementById('drop-zone').classList.add('drag-over'); }
+function queueDragLeave(){ document.getElementById('drop-zone').classList.remove('drag-over'); }
+function queueDrop(e){
+  e.preventDefault(); document.getElementById('drop-zone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0]; if(file) readMdFile(file);
+}
+function handleFileSelect(e){
+  const file = e.target.files[0]; if(file) readMdFile(file); e.target.value='';
+}
+function readMdFile(file){
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const batch = parseMd(ev.target.result);
+    if(!batch){ alert('Could not parse the file. Make sure it starts with --- frontmatter and uses ## section headers.'); return; }
+    contentQueue.unshift(batch); saveQueue(); renderQueue();
+  };
+  reader.readAsText(file);
+}
+
+// ── RENDER ──
+function renderQueue(){
+  const list = document.getElementById('queue-list'); if(!list) return;
+  if(!contentQueue.length){
+    list.innerHTML='<div class="queue-empty"><div class="queue-empty-icon">&#128205;</div><div class="queue-empty-text">No content yet</div><div class="queue-empty-sub">Upload a .md file above to get started</div></div>';
+    return;
+  }
+  list.innerHTML = contentQueue.map((b,i) => renderBatchHtml(b,i)).join('');
+}
+function renderBatchHtml(batch, bi){
+  const platforms = Object.keys(batch.sections);
+  const done = platforms.filter(p=>batch.sections[p].approved).length;
+  const dots = platforms.map(p=>`<div class="batch-dot ${batch.sections[p].approved?'approved':''}"></div>`).join('');
+  const tabs = platforms.map((p,pi)=>{
+    const cfg = PLATFORM_CONFIG[p]||{label:p};
+    return `<button class="ptab2 ${pi===0?'active':''} ${batch.sections[p].approved?'approved-tab':''}" data-platform="${p}" onclick="showPlatformPanel(${bi},'${p}',this)">${cfg.label}</button>`;
+  }).join('');
+  const panels = platforms.map((p,pi)=>renderPlatformPanelHtml(batch,bi,p,pi===0)).join('');
+  return `<div class="queue-batch" id="batch-${bi}">
+  <div class="batch-header" onclick="toggleBatch(${bi})">
+    <div>
+      <div class="batch-week">Week ${escHtml(batch.meta.week||String(bi+1))} &middot; ${escHtml(batch.meta.dates||'')}</div>
+      <div style="font-size:.88rem;font-weight:800;color:var(--heading);margin-top:2px;">${escHtml(batch.meta.pillar||'')}</div>
+      <div class="batch-meta" id="bmeta-${bi}">${done}/${platforms.length} approved</div>
+    </div>
+    <div class="batch-progress" id="bdots-${bi}">${dots}</div>
+    <button class="btn-ghost" style="padding:4px 10px;font-size:.7rem;margin-left:8px;" onclick="event.stopPropagation();deleteBatch(${bi})">Remove</button>
+    <span class="batch-expand" id="barrow-${bi}">&#9655;</span>
+  </div>
+  <div class="batch-body" id="bbody-${bi}">
+    <div class="platform-tabs">${tabs}</div>${panels}
+  </div>
+</div>`;
+}
+function renderPlatformPanelHtml(batch, bi, platform, isActive){
+  const cfg = PLATFORM_CONFIG[platform]||{label:platform,copyOnly:false};
+  const sec = batch.sections[platform];
+  let extra = `<div class="copy-label">Copy</div>`;
+  if(platform==='sender-broadcast'){
+    extra=`<div class="copy-label">Subject Line</div>
+<input class="email-field" value="${escHtml(sec.subject||'')}" placeholder="Subject..." oninput="updateField(${bi},'${platform}','subject',this.value)" />
+<div class="copy-label">Preview Text</div>
+<input class="email-field" value="${escHtml(sec.preview||'')}" placeholder="Preview text..." oninput="updateField(${bi},'${platform}','preview',this.value)" />
+<div class="copy-label">Email Body</div>`;
+  } else if(platform==='sender-sequence'){
+    extra=`<div style="display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap;">
+<div style="flex:2;"><div class="copy-label">Sequence Name</div><input class="email-field" value="${escHtml(sec.sequence_name||'')}" placeholder="e.g. Welcome Series" oninput="updateField(${bi},'${platform}','sequence_name',this.value)" /></div>
+<div><div class="copy-label">Step</div><input class="email-field" type="number" value="${sec.step||1}" style="width:72px;" oninput="updateField(${bi},'${platform}','step',this.value)" /></div>
+<div><div class="copy-label">Delay (days)</div><input class="email-field" type="number" value="${sec.delay_days||0}" style="width:72px;" oninput="updateField(${bi},'${platform}','delay_days',this.value)" /></div>
+</div><div class="copy-label">Email Body</div>`;
+  }
+  const postBtn = cfg.copyOnly
+    ? `<button class="post-btn personal" onclick="copyQueueText(${bi},'${platform}',this)">Copy to clipboard</button><span class="copy-only-badge">Copy only</span>`
+    : `<button class="post-btn" title="Platform connection coming soon">Post to ${escHtml(cfg.label)}</button>`;
+  return `<div class="platform-panel ${isActive?'active':''}" id="panel-${bi}-${platform}">
+${extra}
+<textarea class="copy-textarea" oninput="updateField(${bi},'${platform}','content',this.value)">${escHtml(sec.content||'')}</textarea>
+<div class="platform-actions">
+<label class="approve-toggle ${sec.approved?'checked':''}" onclick="toggleApprove(${bi},'${platform}',this)">
+<div class="approve-box"></div><span class="approve-text">${sec.approved?'Approved':'Approve'}</span>
+</label>
+${postBtn}
+</div></div>`;
+}
+
+// ── QUEUE INTERACTIONS ──
+function toggleBatch(bi){
+  const body=document.getElementById('bbody-'+bi), arrow=document.getElementById('barrow-'+bi);
+  const open=body.classList.toggle('open');
+  arrow.innerHTML = open ? '&#9661;' : '&#9655;';
+}
+function showPlatformPanel(bi, platform, el){
+  const bEl=document.getElementById('batch-'+bi);
+  bEl.querySelectorAll('.platform-panel').forEach(p=>p.classList.remove('active'));
+  bEl.querySelectorAll('.ptab2').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+bi+'-'+platform).classList.add('active');
+  el.classList.add('active');
+}
+function toggleApprove(bi, platform, label){
+  const sec=contentQueue[bi].sections[platform];
+  sec.approved=!sec.approved; saveQueue();
+  label.classList.toggle('checked',sec.approved);
+  label.querySelector('.approve-text').textContent=sec.approved?'Approved':'Approve';
+  document.getElementById('batch-'+bi).querySelector(`[data-platform="${platform}"]`).classList.toggle('approved-tab',sec.approved);
+  const platforms=Object.keys(contentQueue[bi].sections);
+  document.getElementById('bdots-'+bi).querySelectorAll('.batch-dot').forEach((d,i)=>{ if(platforms[i]) d.classList.toggle('approved',contentQueue[bi].sections[platforms[i]].approved); });
+  const done=platforms.filter(p=>contentQueue[bi].sections[p].approved).length;
+  document.getElementById('bmeta-'+bi).textContent=done+'/'+platforms.length+' approved';
+}
+function updateField(bi, platform, field, value){ contentQueue[bi].sections[platform][field]=value; saveQueue(); }
+function copyQueueText(bi, platform, btn){
+  navigator.clipboard.writeText(contentQueue[bi].sections[platform].content||'').then(()=>{
+    btn.textContent='Copied!'; setTimeout(()=>{ btn.textContent='Copy to clipboard'; },2000);
+  });
+}
+function deleteBatch(bi){
+  if(!confirm('Remove this batch from the queue?')) return;
+  contentQueue.splice(bi,1); saveQueue(); renderQueue();
 }
 
 checkSession();
