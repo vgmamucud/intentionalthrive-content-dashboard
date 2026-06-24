@@ -1573,6 +1573,7 @@ function saveQueue(){ localStorage.setItem('content_queue', JSON.stringify(conte
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 const PLATFORM_CONFIG = {
+  'website-article':             { label:'Website Article',  copyOnly:false },
   'facebook-intentional-thrive': { label:'IT Facebook',      copyOnly:false },
   'facebook-life-ready':         { label:'Life Ready FB',    copyOnly:false },
   'facebook-personal':           { label:'Personal FB',      copyOnly:true  },
@@ -1600,6 +1601,22 @@ function parseMd(text){
   return { id:Date.now().toString(), meta, sections, uploadedAt:new Date().toISOString() };
 }
 function parseSection(name, body){
+  if(name === 'website-article'){
+    const lines = body.split('\n');
+    let title='', description='', slug='', pillar='Money Mindset', readTime='5 min', pubDate='', draft=false, start=0;
+    const metaPrefixes = ['title:','description:','slug:','pillar:','readTime:','pubDate:','draft:'];
+    lines.forEach((l,i) => {
+      if(l.startsWith('title:')){ title=l.slice(6).trim(); start=Math.max(start,i+1); }
+      else if(l.startsWith('description:')){ description=l.slice(12).trim(); start=Math.max(start,i+1); }
+      else if(l.startsWith('slug:')){ slug=l.slice(5).trim(); start=Math.max(start,i+1); }
+      else if(l.startsWith('pillar:')){ pillar=l.slice(7).trim(); start=Math.max(start,i+1); }
+      else if(l.startsWith('readTime:')){ readTime=l.slice(9).trim(); start=Math.max(start,i+1); }
+      else if(l.startsWith('pubDate:')){ pubDate=l.slice(8).trim(); start=Math.max(start,i+1); }
+      else if(l.startsWith('draft:')){ draft=l.slice(6).trim()==='true'; start=Math.max(start,i+1); }
+    });
+    while(start < lines.length && !lines[start].trim()) start++;
+    return { title, description, slug, pillar, readTime, pubDate, draft, content:lines.slice(start).join('\n').trim(), approved:false };
+  }
   if(name === 'sender-broadcast'){
     const lines = body.split('\n');
     let subject='', preview='', start=0;
@@ -1682,7 +1699,22 @@ function renderPlatformPanelHtml(batch, bi, platform, isActive){
   const cfg = PLATFORM_CONFIG[platform]||{label:platform,copyOnly:false};
   const sec = batch.sections[platform];
   let extra = `<div class="copy-label">Copy</div>`;
-  if(platform==='sender-broadcast'){
+  if(platform==='website-article'){
+    const pillars = ['Money Mindset','Wealth in Practice','Intentional Living','The Journey'];
+    extra=`<div style="display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap;">
+<div style="flex:3;"><div class="copy-label">Title</div><input class="email-field" value="${escHtml(sec.title||'')}" placeholder="Article title..." oninput="updateField(${bi},'${platform}','title',this.value)" /></div>
+<div style="flex:1;min-width:120px;"><div class="copy-label">Slug (filename)</div><input class="email-field" value="${escHtml(sec.slug||'')}" placeholder="my-article-slug" oninput="updateField(${bi},'${platform}','slug',this.value)" /></div>
+</div>
+<div class="copy-label">Description</div>
+<input class="email-field" value="${escHtml(sec.description||'')}" placeholder="Short description for SEO..." oninput="updateField(${bi},'${platform}','description',this.value)" />
+<div style="display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap;">
+<div style="flex:2;"><div class="copy-label">Pillar</div><select class="email-field" oninput="updateField(${bi},'${platform}','pillar',this.value)">${pillars.map(p=>`<option${sec.pillar===p?' selected':''}>${p}</option>`).join('')}</select></div>
+<div><div class="copy-label">Read Time</div><input class="email-field" value="${escHtml(sec.readTime||'5 min')}" style="width:90px;" oninput="updateField(${bi},'${platform}','readTime',this.value)" /></div>
+<div><div class="copy-label">Pub Date</div><input class="email-field" value="${escHtml(sec.pubDate||'')}" placeholder="June 2026" style="width:110px;" oninput="updateField(${bi},'${platform}','pubDate',this.value)" /></div>
+<div style="display:flex;align-items:flex-end;padding-bottom:8px;gap:6px;font-size:.78rem;color:var(--muted);font-weight:700;"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" ${sec.draft?'checked':''} onchange="updateField(${bi},'${platform}','draft',this.checked)"> Draft</label></div>
+</div>
+<div class="copy-label">Article Body (Markdown)</div>`;
+  } else if(platform==='sender-broadcast'){
     extra=`<div class="copy-label">Subject Line</div>
 <input class="email-field" value="${escHtml(sec.subject||'')}" placeholder="Subject..." oninput="updateField(${bi},'${platform}','subject',this.value)" />
 <div class="copy-label">Preview Text</div>
